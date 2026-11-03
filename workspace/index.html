@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ax_ganes · workspace</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23E55A1F'/><text x='16' y='22' font-size='18' font-family='system-ui,sans-serif' font-weight='bold' fill='white' text-anchor='middle'>g</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Ganes SaaS design tokens (frontend/ganes-owner/panda.config.mjs) */
+:root{
+  --bg:#FAFAFB;--surf1:#F5F2FA;--surf2:#ECE6F5;--surf3:#DDD3EE;--raised:#FFFFFF;
+  --text:#1A1235;--text2:#564878;--text3:#9389AC;--mute:#B8AFCC;
+  --border:rgba(31,21,67,.07);--border2:rgba(31,21,67,.14);--strong:rgba(31,21,67,.22);
+  --accent:#3D1F87;--accentH:#2C1664;--accentSoft:rgba(61,31,135,.09);--accentSoft2:rgba(61,31,135,.18);--accentBd:rgba(61,31,135,.20);
+  --pDarker:#0F0726;--pDark:#1A1042;--pD:#2C1664;--pL:#5B3EAA;
+  --orange:#E55A1F;--orangeTint:#FFB892;--orangeSoft14:rgba(229,90,31,.14);--orangeSoft:rgba(229,90,31,.09);
+  --danger:#C81E1E;--dangerSoft:rgba(200,30,30,.08);--dangerText:#9F1818;
+  --success:#0F8F4D;--successSoft:rgba(15,143,77,.10);--successText:#0B6E3B;
+  --warn:#C2780A;--warnSoft:rgba(194,120,10,.10);--warnText:#8C5707;
+  --blue:#3A88F0;--blueSoft:rgba(58,136,240,.10);--blueText:#1F5FB0;
+  --sbText:rgba(255,255,255,.58);--sbLabel:rgba(255,255,255,.30);
+  --body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;--display:'Instrument Sans','Inter',sans-serif;
+  --panelW:360px;
+  /* v3.3: workspace tokens mapped onto ganes-groceries-development (wireframe/styles.css :root).
+     Home is no longer white/blue: lavender surface, dark-purple band, ink buttons, Inter + Instrument Sans. */
+  --a:#3D1F87;--a08:rgba(61,31,135,.08);--a15:rgba(61,31,135,.15);--a30:rgba(61,31,135,.3);
+  --t1:#1A1235;--t2:#564878;--t3:#564878;--t4:#7A6F96;--t5:#9389AC;--bd:rgba(31,21,67,.08);--bd2:rgba(31,21,67,.14);--bd3:rgba(31,21,67,.16);--card:#FFFFFF;--desk:#DDD3EE;
+  --bg:#F5F2FA;--ink:#1A1042;--inkH:#2C1664;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--body);color:var(--text);background:var(--desk);overflow:hidden;font-size:13px;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;color:inherit}
+[hidden]{display:none!important}
+svg{flex:none}
+
+/* ---------- v3.1 shell: tablet stage, header, All menus sheet, ask field (copied from workspace-v3.1) ---------- */
+#wrap{position:fixed;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center}
+#tab{width:1180px;height:820px;flex:none;border-radius:24px;overflow:hidden;position:relative;background:var(--bg);isolation:isolate;box-shadow:0 1px 3px rgba(0,0,0,.12),0 20px 60px rgba(20,12,48,.12);transform-origin:center center;display:flex;flex-direction:column}
+
+.hd{position:relative;z-index:10;height:88px;flex:none;padding:22px 40px 0;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;text-align:left;color:inherit}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;line-height:1;padding-bottom:4px}
+.brand{text-decoration:none;color:inherit}
+.brand b{display:block;font-size:17px;font-weight:700}
+.brand small{display:block;margin-top:2px;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--t4)}
+.nav{display:flex;align-items:center;gap:8px;position:relative}
+.hpill{height:44px;padding:0 16px 0 14px;border-radius:22px;border:1px solid var(--bd2);background:#fff;color:var(--t1);font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
+.hpill:hover{border-color:#C9CED6}
+.hpill[aria-expanded=true]{border-color:var(--a);background:var(--a08)}
+.alerts{height:44px;padding:0 14px;display:flex;align-items:center;gap:8px;color:var(--t2);font-size:15px;font-weight:500;cursor:default;border-radius:22px;position:relative}
+.badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#E6E8EC;color:var(--t1);font-size:12px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
+.alerts.pulse:after{content:"";position:absolute;inset:-2px;border-radius:24px;border:2px solid var(--a);animation:pl 1.4s ease-out infinite}
+@keyframes pl{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.18)}}
+.av{width:32px;height:32px;border-radius:16px;background:var(--t1);color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.me{padding:0 12px 0 6px}
+@keyframes cin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.askw{margin-top:auto;position:relative}
+.ask{height:60px;border-radius:30px;background:#fff;border:1px solid var(--bd3);display:flex;align-items:center;gap:10px;padding:0 8px 0 20px;transition:border-color .15s,box-shadow .15s}
+.ask:focus-within{border-color:var(--a);box-shadow:0 0 0 4px var(--a08)}
+.ask.lis{border:2px solid var(--a)}
+.ask input{flex:1;min-width:0;height:44px;border:0;outline:0;background:none;font-family:inherit;font-size:16px;color:var(--t1)}
+.speak{height:44px;padding:0 16px 0 12px;border-radius:22px;border:0;background:var(--a08);color:var(--a);font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}
+.speak.on{background:var(--a);color:#fff}
+.askbtn{height:44px;padding:0 18px;border-radius:22px;border:0;background:var(--a);color:#fff;font-size:15px;font-weight:600}
+.tip{position:absolute;right:0;bottom:70px;background:var(--t1);color:#fff;font-size:13px;border-radius:10px;padding:6px 6px 6px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(20,12,48,.18);animation:cin .3s}
+.tip button{height:32px;padding:0 10px;border:0;border-radius:8px;background:rgba(255,255,255,.14);color:#fff;font-size:13px;font-weight:600}
+.tip:after{content:"";position:absolute;right:40px;bottom:-5px;width:10px;height:10px;background:var(--t1);transform:rotate(45deg)}
+.dd{position:absolute;top:52px;right:0;width:300px;background:#fff;border:1px solid var(--bd);border-radius:16px;box-shadow:0 16px 40px rgba(20,12,48,.14);padding:8px;z-index:30;animation:cin .2s}
+.dd .who{display:flex;align-items:center;gap:12px;padding:10px 10px 12px;border-bottom:1px solid var(--bd);margin-bottom:6px}
+.dd .who b{display:block;font-size:15px}.dd .who small{display:block;font-size:12.5px;color:var(--t4)}
+.dd .av{width:40px;height:40px;border-radius:20px;font-size:15px}
+.di{width:100%;min-height:44px;padding:8px 10px;border:0;background:none;border-radius:10px;display:flex;align-items:center;gap:12px;text-align:left;color:var(--t1);font-size:14.5px;font-weight:500}
+.di:hover{background:var(--bg)}
+.di svg{color:var(--t4);flex:none}
+.di small{margin-left:auto;font-size:11.5px;color:var(--t5);font-weight:500}
+.dh{margin:10px 10px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--t4)}
+.dsep{height:1px;background:var(--bd);margin:6px 2px}
+
+/* All menus sheet */
+.scrim{position:absolute;inset:0;background:rgba(20,12,48,.28);z-index:40;animation:fd .25s}
+@keyframes fd{from{opacity:0}}
+.sheet{position:absolute;left:50%;top:50%;width:820px;max-height:720px;transform:translate(-50%,-50%);background:#fff;border-radius:24px;box-shadow:0 24px 60px rgba(20,12,48,.22);z-index:41;display:flex;flex-direction:column;animation:shin .55s cubic-bezier(.16,1,.3,1)}
+@keyframes shin{from{opacity:0;transform:translate(-50%,40%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%)}}
+.sh{padding:24px 28px 0;display:flex;align-items:flex-start;gap:16px}
+.sh h3{margin:0;font-size:22px}.sh p{margin:4px 0 0;font-size:14px;color:var(--t4)}
+.sh .sp{flex:1}
+.close{height:40px;padding:0 14px;border-radius:20px;border:1px solid var(--bd2);background:#fff;font-size:14px;font-weight:600;color:var(--t2)}
+.msrch{margin:16px 28px 0;height:44px;border:1px solid var(--bd3);border-radius:12px;display:flex;align-items:center;gap:8px;padding:0 14px}
+.msrch:focus-within{border-color:var(--a)}
+.msrch input{flex:1;border:0;outline:0;font-family:inherit;font-size:15px}
+.msb{overflow:auto;padding:4px 28px 8px}
+.ms{margin-top:18px}
+.ms h4{margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--t4);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.ms h4:after{content:"";flex:1;height:1px;background:var(--bd)}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mi{min-height:76px;padding:12px;border:1px solid var(--bd);border-radius:14px;background:#fff;display:flex;align-items:flex-start;gap:12px;text-align:left;animation:miIn .5s cubic-bezier(.2,.9,.3,1.15) both;animation-delay:calc(.12s + var(--i,0)*40ms)}
+@keyframes miIn{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.mi:hover{border-color:var(--a);box-shadow:0 4px 14px rgba(61,31,135,.08)}
+.mi .ti{width:40px;height:40px;flex:none;border-radius:12px;background:var(--a08);color:var(--a);display:flex;align-items:center;justify-content:center}
+.mi .x{min-width:0}.mi b{display:block;font-size:15px;font-weight:600;color:var(--t1)}.mi small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:var(--t4)}
+.mi .tbd{display:inline-block;margin-left:4px;font-size:10.5px;font-weight:700;color:var(--t4);background:#F2F4F7;border-radius:6px;padding:1px 5px;vertical-align:2px}
+.sf{margin:12px 28px 24px;padding:12px 14px;border-radius:14px;background:var(--bg);display:flex;align-items:center;gap:12px;font-size:14px;color:var(--t3)}
+.sf svg{color:var(--t4);flex:none}.sf b{color:var(--t1)}
+.sf .sp{flex:1}
+.ghost2{height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--bd3);background:#fff;font-size:14px;font-weight:600;color:var(--t1);white-space:nowrap}
+.empty{padding:30px 0;text-align:center;color:var(--t4);font-size:14px}
+.ask.typ{border:2px solid var(--a)}
+
+/* ---------- shell ---------- */
+.app{position:absolute;inset:0;display:flex;transition:filter .55s cubic-bezier(.2,.8,.2,1),transform .55s cubic-bezier(.2,.8,.2,1);transform-origin:center}
+body.priv .app{filter:blur(9px) saturate(.92);transform:scale(.995);pointer-events:none;user-select:none}
+.veil{position:absolute;inset:0;z-index:60;background:radial-gradient(120% 90% at 85% 90%,rgba(246,247,249,.10),rgba(20,12,48,.14));opacity:0;pointer-events:none;transition:opacity .55s}
+body.priv .veil{opacity:1;pointer-events:auto}
+
+/* sidebar: dark purple gradient, as in DashboardLayout.recipe */
+.sb{width:232px;flex:none;display:flex;flex-direction:column;padding:16px 11px 14px;background:linear-gradient(180deg,var(--pDarker) 0%,var(--pDark) 100%);color:var(--sbText);overflow-y:auto}
+.sb::-webkit-scrollbar{width:0}
+.sb-logo{display:flex;align-items:center;gap:9px;padding:0 7px;margin-bottom:16px;color:#fff}
+.mark{width:26px;height:26px;border-radius:7px;background:var(--orange);color:#fff;display:grid;place-items:center;font:700 16px/1 var(--display);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.sb-logo b{font:600 15px/1 var(--display);letter-spacing:-.01em}
+.sb-logo .sp{flex:1}
+.ib{width:28px;height:28px;border-radius:7px;border:0;background:none;display:grid;place-items:center;color:inherit}
+.ib:hover{background:rgba(255,255,255,.06)}
+.sb-search{display:flex;align-items:center;gap:8px;height:32px;margin:0 0 12px;padding:0 10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:12.5px}
+.sb-search kbd{margin-left:auto;font:600 10.5px var(--body);color:rgba(255,255,255,.4)}
+.sb-sec{padding:12px 9px 5px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sbLabel)}
+.nv{display:flex;align-items:center;gap:10px;width:100%;height:32px;padding:0 9px;border:0;border-radius:8px;background:none;color:var(--sbText);font-size:13px;font-weight:500;text-align:left;text-decoration:none}
+.nv:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.86)}
+.nv.on{background:var(--orangeSoft14);color:#fff}
+.nv.on svg{color:var(--orangeTint)}
+.nv .ct{margin-left:auto;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--orange);color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center}
+.nv .chev{margin-left:auto;opacity:.45}
+.sub{display:flex;flex-direction:column;padding-left:28px;margin:1px 0 3px}
+.sub a{display:flex;align-items:center;gap:8px;height:27px;padding:0 9px;border-radius:7px;color:rgba(255,255,255,.48);font-size:12.5px;text-decoration:none}
+.sub a:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sub i{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.22)}
+.sub i.live{background:#34D399}
+.sub .cts{font-size:10.5px;font-weight:700;color:var(--orangeTint)}
+.sb-foot{margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+.sb-user{display:flex;align-items:center;gap:9px;width:100%;padding:7px;border:0;border-radius:9px;background:none;text-align:left;color:#fff}
+.sb-user:hover{background:rgba(255,255,255,.06)}
+.sb-av{width:30px;height:30px;border-radius:9px;background:var(--pL);display:grid;place-items:center;font-weight:600;border:1px solid rgba(255,255,255,.08)}
+.sb-user small{display:block;color:rgba(255,255,255,.55);font-size:11px;margin-top:1px}
+.sb-user b{font-size:12.5px;font-weight:600}
+
+/* main column: rounded white sheet like the reference, Ganes surfaces */
+.mainc{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+.top{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--raised)}
+.top h1{margin:0;font:600 17px/1 var(--display);letter-spacing:-.015em;display:flex;align-items:center;gap:8px}
+.top .sp{flex:1}
+.seg{display:flex;padding:3px;border-radius:9px;background:var(--surf1);border:1px solid var(--border)}
+.seg button{height:26px;padding:0 10px;border:0;border-radius:7px;background:none;font-size:12px;font-weight:500;color:var(--text2)}
+.seg button[aria-pressed=true]{background:var(--raised);color:var(--text);box-shadow:0 1px 2px rgba(20,12,48,.08)}
+.btn{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border2);background:var(--raised);font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--strong)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+.btn.pri:hover{background:var(--accentH)}
+.btn.ask{border-color:var(--accentBd);color:var(--accent);background:var(--accentSoft)}
+.btn.ghost{border-color:transparent;background:none;color:var(--text2)}
+.camchip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:14px;background:var(--surf1);font-size:11.5px;font-weight:600;color:var(--text2)}
+.camchip i{width:7px;height:7px;border-radius:4px;background:var(--mute)}
+.camchip.on i{background:#0F8F4D;box-shadow:0 0 0 3px rgba(15,143,77,.15)}
+.camchip.alert i{background:var(--danger)}
+.content{flex:1;overflow-y:auto;padding:4px 40px 40px}
+.grid{display:grid;gap:14px}
+.card{background:var(--raised);border:1px solid var(--border);border-radius:14px;box-shadow:0 1px 2px rgba(20,12,48,.04);padding:16px 18px;position:relative}
+.card h3{margin:0;font:600 13.5px/1.2 var(--display);letter-spacing:-.005em;display:flex;align-items:center;gap:8px}
+.card h3 .act{margin-left:auto;font:500 12px var(--body);color:var(--accent);background:none;border:0;padding:0}
+.muted{color:var(--text3)}
+
+.health{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:var(--warnSoft);border:1px solid rgba(194,120,10,.18);color:var(--warnText)}
+.health b{font-weight:600;color:var(--text)}
+.health.ok{background:var(--successSoft);border-color:rgba(15,143,77,.18);color:var(--successText)}
+.calm{display:grid;gap:16px;max-width:1080px;margin:0 auto}
+/* v3.2.2 clean home: one primary, two quiet secondary, semantic items */
+.home{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:20px;min-height:100%}
+.home .askw{margin-top:4px}
+.hello .date{font-size:12px;color:var(--text3);font-weight:500}
+.hello h1{margin:6px 0 0;font:600 30px/1.15 var(--display);letter-spacing:-.025em}
+.hello p{margin:6px 0 0;color:var(--text2);font-size:14px}
+.fwrap{position:relative;isolation:isolate}
+.focus{position:relative;z-index:1;background:var(--raised);border:1px solid var(--border);border-radius:20px;padding:24px 26px;box-shadow:0 1px 2px rgba(20,12,48,.04),0 12px 32px rgba(61,31,135,.06)}
+.focus .fh{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:600}
+.focus .fh span{display:inline-flex;align-items:center;gap:6px;color:var(--accent)}
+.focus .fh span.urg{color:var(--danger)}.focus .fh span.okk{color:var(--success)}
+.focus .fh i{width:7px;height:7px;border-radius:4px;background:currentColor}
+.focus .fh em{font-style:normal;color:var(--text3);font-weight:500}
+.focus h2{margin:10px 0 6px;font:600 22px/1.25 var(--display);letter-spacing:-.02em}
+.focus p{margin:0;color:var(--text2);font-size:14px;line-height:1.55}
+.focus .draft{font-size:13.5px;padding:12px 14px}
+.src2{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;color:var(--text3)}
+.fa{display:flex;align-items:center;gap:8px;margin-top:18px}
+.btn.big{height:40px;padding:0 18px;font-size:13.5px}
+.orbs{position:absolute;inset:-70px -60px;z-index:0;pointer-events:none}
+.ob{position:absolute;border-radius:50%;filter:blur(26px);opacity:.9}
+.ob.o1{width:300px;height:300px;right:-10px;top:-30px;background:radial-gradient(circle at 40% 40%,rgba(91,62,170,.28),rgba(91,62,170,.08) 55%,transparent 72%);animation:ofl1 34s ease-in-out infinite}
+.ob.o2{width:220px;height:220px;left:-20px;bottom:-40px;background:radial-gradient(circle,rgba(229,90,31,.16),rgba(229,90,31,.05) 55%,transparent 72%);animation:ofl2 42s ease-in-out infinite}
+.ob.o3{width:160px;height:160px;left:40%;top:-50px;background:radial-gradient(circle,rgba(58,136,240,.14),transparent 70%);animation:ofl1 50s ease-in-out infinite reverse}
+@keyframes ofl1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,26px) scale(1.12)}}
+@keyframes ofl2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(36px,-20px) scale(1.1)}}
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--border)}
+.mini b{display:block;font-size:13px;font-weight:600}
+.mini small{display:flex;align-items:center;gap:4px;margin-top:3px;color:var(--text2);font-size:12px}
+.mi-i{width:30px;height:30px;border-radius:9px;background:var(--surf1);color:var(--accent);display:grid;place-items:center;flex:none}
+.lnk{border:0;background:none;padding:0;color:var(--accent);font:inherit;font-weight:600;text-decoration:none;cursor:pointer}
+.lnk em{font-style:normal;display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;margin-left:3px;border-radius:8px;background:var(--orangeSoft14);color:var(--orange);font-size:10.5px}
+.sem{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;color:var(--text3)}
+.sem .st{display:inline-flex;align-items:center;gap:6px}.sem .st i{width:7px;height:7px;border-radius:4px;background:var(--success)}
+@media (prefers-reduced-motion:reduce){.ob{animation:none}}
+.why{display:flex;align-items:center;gap:8px;padding:4px 2px;color:var(--text3);font-size:12px}
+.why b{color:var(--text2);font-weight:600}
+.why .sp{flex:1}
+.health .sp{flex:1}
+.stats{grid-template-columns:repeat(4,1fr)}
+.stat{padding:14px 16px}
+.stat small{display:block;font-size:11.5px;color:var(--text2);font-weight:500}
+.stat .v{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+.stat .v b{font:600 22px/1 var(--display);letter-spacing:-.02em}
+.dl{font-size:11px;font-weight:600;padding:2px 6px;border-radius:6px}
+.dl.up{background:var(--successSoft);color:var(--successText)}.dl.dn{background:var(--dangerSoft);color:var(--dangerText)}.dl.st{background:var(--surf1);color:var(--text2)}
+.r2{grid-template-columns:2fr 1fr}.r3{grid-template-columns:1fr 1fr 1fr}.r11{grid-template-columns:1fr 1fr}
+.bars{display:flex;align-items:flex-end;gap:10px;height:150px;margin-top:16px;padding-bottom:20px;position:relative}
+.bars div{flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--pL),var(--accent));position:relative;min-height:6px}
+.bars div:nth-child(5){background:linear-gradient(180deg,#F07A45,var(--orange))}
+.bars div span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--text3)}
+.fb{display:flex;align-items:center;gap:14px;margin-top:14px}
+.ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--success) 0 92%,var(--surf2) 92% 100%);display:grid;place-items:center}
+.ring b{width:64px;height:64px;border-radius:50%;background:#fff;display:grid;place-items:center;font:600 18px var(--display)}
+.kv{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.kv:last-child{border:0}
+.kv span{color:var(--text2)}
+.pill{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;font-size:11px;font-weight:600}
+.pill.g{background:var(--successSoft);color:var(--successText)}.pill.r{background:var(--dangerSoft);color:var(--dangerText)}.pill.a{background:var(--warnSoft);color:var(--warnText)}.pill.b{background:var(--blueSoft);color:var(--blueText)}.pill.n{background:var(--surf1);color:var(--text2)}
+.topic{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12.5px}
+.topic .tb{flex:1;height:6px;border-radius:3px;background:var(--surf1);overflow:hidden}
+.topic .tb i{display:block;height:100%;background:var(--pL);border-radius:3px}
+.topic em{font-style:normal;color:var(--text3);width:34px;text-align:right}
+.rc{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.rc:last-child{border:0}
+.rc .av2{width:28px;height:28px;border-radius:8px;background:var(--surf2);display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--accent);flex:none}
+.rc p{margin:2px 0 0;color:var(--text2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc .x{flex:1;min-width:0}
+.rc b{font-size:12.5px;font-weight:600}
+.assist{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;border:1px dashed var(--accentBd);background:var(--accentSoft);color:var(--accent);font-size:11.5px;font-weight:600}
+.assist:hover{border-style:solid}
+.geo{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+
+/* ---------- ax_ganes panel (right) ---------- */
+.ax{width:0;max-width:0;min-width:0;padding:0;flex:none;overflow:hidden;transition:width .32s cubic-bezier(.2,.8,.2,1),max-width .32s cubic-bezier(.2,.8,.2,1)}
+body.ax-open .ax{width:var(--panelW);max-width:var(--panelW)}
+.axin{width:var(--panelW);height:calc(100% - 24px);margin:12px 12px 12px 0;border-radius:14px;background:var(--raised);display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border)}
+.axh{display:flex;align-items:center;gap:8px;padding:12px 12px 10px 14px;border-bottom:1px solid var(--border)}
+.axh img{width:30px;height:30px}
+.axh b{font:600 14px var(--display)}
+.axh small{display:block;font-size:11px;color:var(--text3);font-weight:500}
+.axh .sp{flex:1}
+.axh .ib{color:var(--text2)}.axh .ib:hover{background:var(--surf1)}
+.axb{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:12px}
+.hi h2{margin:0;font:600 18px/1.25 var(--display);letter-spacing:-.015em}
+.hi p{margin:4px 0 0;color:var(--text2);font-size:12.5px;line-height:1.5}
+.src{display:inline-flex;align-items:center;height:18px;padding:0 6px;margin:0 2px;border-radius:5px;background:var(--surf1);color:var(--text2);font-size:10.5px;font-weight:600;vertical-align:1px}
+.fc{border-radius:14px;border:1px solid var(--accentBd);background:linear-gradient(180deg,#fff,#FBF9FE);padding:14px;box-shadow:0 6px 18px rgba(61,31,135,.08)}
+.fc .tg{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600}
+.fc .tg span{display:inline-flex;align-items:center;gap:6px;color:var(--accent)}
+.fc .tg span.urg{color:var(--danger)}
+.fc .tg span i{width:6px;height:6px;border-radius:3px;background:currentColor}
+.fc .tg em{font-style:normal;color:var(--text3);font-weight:500}
+.fc h4{margin:8px 0 4px;font:600 15px/1.3 var(--display)}
+.fc p{margin:0;color:var(--text2);font-size:12.5px;line-height:1.5}
+.fc .why{margin-top:8px;font-size:11.5px;color:var(--text3)}
+.draft{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--surf1);font-size:12.5px;line-height:1.5;color:var(--text)}
+.draft small{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text3);margin-bottom:3px}
+.prev{margin-top:10px;border:1px solid var(--border2);border-radius:10px;overflow:hidden}
+.prev .r{display:flex;justify-content:space-between;padding:7px 10px;font-size:12px;border-bottom:1px solid var(--border)}
+.prev .r:last-child{border:0}
+.prev .r span{color:var(--text2)}
+.prev .r b s{color:var(--text3);font-weight:500;margin-right:6px}
+.impact{margin-top:8px;padding:8px 10px;border-radius:9px;background:var(--warnSoft);color:var(--warnText);font-size:11.5px;line-height:1.45}
+.fc .acts{display:flex;align-items:center;gap:8px;margin-top:12px}
+.fc .acts .sp{flex:1}
+.done{display:flex;gap:10px;align-items:flex-start}
+.done .ck{width:28px;height:28px;border-radius:14px;background:var(--successSoft);color:var(--success);display:grid;place-items:center;flex:none}
+.log{margin-top:6px;font-size:11px;color:var(--text3)}
+.msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.5}
+.msg.u{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.msg.a{align-self:flex-start;background:var(--surf1);border-bottom-left-radius:4px}
+.msg.a .prev{background:#fff}
+.typing{display:inline-flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:3px;background:var(--text3);animation:tp 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes tp{0%,100%{opacity:.3}50%{opacity:1}}
+.fbk{display:flex;gap:4px;margin-top:4px}
+.fbk button{width:26px;height:26px;border:0;border-radius:7px;background:none;color:var(--text3);display:grid;place-items:center}
+.fbk button:hover{background:var(--surf1)}
+.axf{padding:10px 12px 12px}
+.comp{display:flex;align-items:center;gap:8px;min-height:46px;padding:6px 6px 6px 12px;border-radius:14px;border:1px solid var(--border2);background:#fff;box-shadow:0 4px 14px rgba(20,12,48,.06)}
+.comp:focus-within{border-color:var(--accentBd);box-shadow:0 0 0 3px var(--accentSoft)}
+.comp input{flex:1;border:0;outline:0;font:13px var(--body);color:var(--text);background:none;min-width:0}
+.comp .ib{color:var(--text2)}.comp .ib:hover{background:var(--surf1)}
+.comp .ib.on{background:var(--accent);color:#fff}
+.hint{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hint button{height:26px;padding:0 10px;border-radius:13px;border:1px solid var(--border2);background:#fff;font-size:11.5px;color:var(--text2)}
+.hint button:hover{border-color:var(--accentBd);color:var(--accent)}
+.gst{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--surf1);font-size:11.5px;color:var(--text2);margin-bottom:8px}
+.gst b{color:var(--text)}
+.gst .bar{flex:1;height:4px;border-radius:2px;background:var(--surf3);overflow:hidden}
+.gst .bar i{display:block;height:100%;background:var(--accent);width:0}
+
+/* ---------- Orka: the ax_ganes mascot, always outside the blur ----------
+   Moves like the Chrome offline dino: runs along the bottom toward the pointer in real time,
+   leans into the run, hops when the pointer comes close. Only 2D moves, so the head never warps. */
+.orka{position:absolute;z-index:80;left:0;bottom:56px;width:72px;height:72px;border:0;padding:0;background:none;will-change:transform;transition:opacity .25s,width .4s,height .4s}
+body.ax-open.orka-dock .orka{opacity:0;pointer-events:none}
+.orka .ohd{position:absolute;inset:0;transform-origin:50% 92%;will-change:transform;filter:drop-shadow(0 10px 12px rgba(15,7,38,.26))}
+.orka img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+/* face layer: the visor content (eyes + mouth) is clipped to the visor and slides toward the cursor */
+.orka .face{position:absolute;inset:0;clip-path:inset(30% 16% 24% 16% round 26%);pointer-events:none}
+.orka .face img{will-change:transform}
+.orka:focus-visible{outline:3px solid var(--orange);outline-offset:4px;border-radius:50%}
+.orka .shadow{position:absolute;left:20%;right:20%;bottom:-10px;height:10px;border-radius:50%;background:rgba(15,7,38,.24);filter:blur(4px);will-change:transform,opacity}
+.orka .dust{position:absolute;bottom:-6px;width:6px;height:6px;border-radius:50%;background:rgba(229,90,31,.35);opacity:0}
+.orka.land .dust{animation:dust .45s ease-out}
+.orka .dust.l{left:22%;--dx:-16px}.orka .dust.r{right:22%;--dx:16px}
+@keyframes dust{0%{opacity:.8;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),-6px) scale(.3)}}
+body.priv .orka{opacity:1!important;pointer-events:auto}
+.bub{position:absolute;z-index:81;left:0;bottom:168px;width:max-content;max-width:300px;padding:12px 14px;border-radius:16px;background:#fff;color:var(--text);box-shadow:0 12px 32px rgba(15,7,38,.18),0 0 0 1px var(--border);font-size:12.5px;line-height:1.5;transform-origin:bottom center;animation:bin .35s cubic-bezier(.2,.9,.3,1.3)}
+.bub:after{content:"";position:absolute;left:var(--tail,50%);bottom:-7px;width:14px;height:14px;margin-left:-7px;background:#fff;transform:rotate(45deg);box-shadow:3px 3px 4px rgba(15,7,38,.05)}
+.bub b{font-weight:600}
+.bub .ba{display:flex;gap:6px;margin-top:9px}
+.bub.sm{padding:8px 12px;font-weight:600;white-space:nowrap}
+.bub .x{position:absolute;top:6px;right:6px;width:22px;height:22px;border:0;border-radius:6px;background:none;color:var(--text3);font-size:15px;line-height:1}
+body.priv .bub{max-width:300px}
+body.demo .app,body.demo .orka,body.demo .veil{transition:none!important}
+
+@keyframes bin{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:none}}
+
+/* ---------- menus, modal ---------- */
+.menu{position:fixed;left:12px;bottom:66px;width:208px;z-index:50;padding:6px;border-radius:12px;background:#251548;box-shadow:0 12px 30px rgba(0,0,0,.35);color:#fff}
+.menu button{display:flex;width:100%;align-items:center;gap:9px;height:32px;padding:0 9px;border:0;border-radius:7px;background:none;font-size:12.5px;color:rgba(255,255,255,.82);text-align:left}
+.menu button:hover{background:rgba(255,255,255,.08)}
+.menu hr{border:0;border-top:1px solid rgba(255,255,255,.08);margin:4px 0}
+.mscrim{position:absolute;inset:0;z-index:70;background:rgba(15,7,38,.32);display:grid;place-items:center}
+.modal{width:520px;max-width:94vw;border-radius:16px;background:#fff;box-shadow:0 24px 60px rgba(15,7,38,.3);overflow:hidden}
+.modal header{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border)}
+.modal header h3{margin:0;font:600 16px var(--display);flex:1}
+.modal .mb{padding:6px 18px 16px}
+.tgl{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.tgl:last-child{border:0}
+.tgl .x{flex:1}
+.tgl b{font-size:13px;font-weight:600}
+.tgl small{display:block;color:var(--text2);font-size:12px;margin-top:2px;line-height:1.45}
+.sw{width:38px;height:22px;border-radius:11px;border:0;background:var(--surf3);position:relative;flex:none;transition:background .2s}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .2s}
+.sw[aria-checked=true]{background:var(--accent)}
+.sw[aria-checked=true]:after{left:19px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:90;padding:10px 14px;border-radius:10px;background:var(--pDark);color:#fff;font-size:12.5px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.toast button{margin-left:10px;border:0;background:none;color:var(--orangeTint);font-weight:600}
+video.cam{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;top:-10px}
+
+/* ---------- POC tools (closed by default; same look as earlier POCs) ---------- */
+.pocb{position:fixed;left:16px;bottom:16px;z-index:9000;display:none;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:#0B1020;color:#E5E7EB;font:600 12px/1 system-ui,sans-serif;cursor:pointer}
+body.poc-avail .pocb{display:flex}
+.pocb kbd{font:600 11px ui-monospace,monospace;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.1)}
+.poc{position:fixed;top:0;left:0;bottom:0;width:320px;z-index:9001;display:none;flex-direction:column;background:#0B1020;color:#C9CED8;border-right:1px solid rgba(255,255,255,.12);font:12.5px/1.45 system-ui,sans-serif}
+.poc.on{display:flex}
+.poc header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.1)}
+.poc header b{color:#fff;font-size:14px}.poc header i{font-style:normal;color:#8A8A92;margin-left:6px}
+.poc header button{background:none;border:0;color:#C9CED8;font-size:20px}
+.poc .pb{overflow:auto;flex:1}
+.poc section{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.poc h5{margin:0 0 8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8A8A92}
+.poc .row{display:flex;flex-wrap:wrap;gap:6px}
+.poc .pbn{padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.16);background:#121933;color:#E5E7EB;font:600 12px system-ui,sans-serif}
+.poc .pbn:hover{border-color:rgba(255,255,255,.32)}
+.poc .pbn[aria-pressed=true]{background:#1E8FFF;border-color:#1E8FFF;color:#fff}
+.poc p{margin:6px 0 0;color:#8A8A92}
+.poc kbd{font:600 11px ui-monospace,monospace;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.1);color:#E5E7EB}
+@media (prefers-reduced-motion:reduce){.app,.ax,.orka{transition:none}}
+/* ---------- v3.3: Home is an ax_ganes page in Ganes colours ---------- */
+.mainc{position:relative}
+.mainc:before{content:"";position:absolute;left:0;right:0;top:0;height:96px;z-index:0;pointer-events:none;
+  background:radial-gradient(60% 140% at 88% -10%,rgba(229,90,31,.30),transparent 60%),radial-gradient(50% 120% at 10% 0%,rgba(91,62,170,.45),transparent 70%),linear-gradient(160deg,var(--pDarker),var(--pDark) 70%,var(--pD))}
+.mainc:has(.home):before{height:268px}
+.mainc>.content{position:relative;z-index:1}
+.hd{color:#fff}
+.hd .brand small{color:rgba(255,255,255,.55)}
+.hd .logo{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:0;overflow:hidden}
+.hd .logo img{width:40px;height:40px}
+.hd .alerts{color:rgba(255,255,255,.78)}
+.hd .badge{background:var(--orange);color:#fff}
+.hd .hpill{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff}
+.hd .hpill:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+.hd .hpill[aria-expanded=true]{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
+.hd .av{background:var(--orange)}
+.hd .dd{color:var(--t1)}
+.ownr{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;margin-left:6px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7)}
+.ownr i{width:6px;height:6px;border-radius:3px;background:#34D399}
+.hello .date{color:rgba(255,255,255,.6)}
+.hello h1{color:#fff}
+.hello p{color:rgba(255,255,255,.75)}
+.focus{border-radius:var(--r3,14px);box-shadow:0 1px 2px rgba(20,12,48,.04),0 24px 60px rgba(20,12,48,.18)}
+.mini{background:var(--raised);border-radius:12px}
+.mi-i{background:var(--surf2)}
+.ask{border-color:var(--bd2);box-shadow:0 1px 2px rgba(20,12,48,.04)}
+.speak{background:var(--a08);color:var(--a)}
+.btn.pri{background:var(--ink);border-color:var(--ink)}
+.btn.pri:hover{background:var(--inkH)}
+.draft{background:var(--surf1)}
+/* Orka gets sleepy after 5 s without any input */
+.orka .zz{position:absolute;right:-6px;top:-14px;font:700 14px/1 var(--display);color:var(--pL);pointer-events:none;opacity:0}
+.orka .zz b{position:absolute;opacity:0}
+body.orka-sleepy .orka .zz{opacity:1}
+body.orka-sleepy .orka .zz b{animation:zz 2.4s ease-out infinite}
+.orka .zz b:nth-child(2){animation-delay:.8s!important;font-size:11px}.orka .zz b:nth-child(3){animation-delay:1.6s!important;font-size:9px}
+@keyframes zz{0%{opacity:0;transform:translate(0,0)}25%{opacity:1}100%{opacity:0;transform:translate(14px,-26px)}}
+.orka.jolt{animation:jolt .55s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes jolt{0%{margin-top:0}35%{margin-top:-22px}100%{margin-top:0}}
+@media (prefers-reduced-motion:reduce){body.orka-sleepy .orka .zz b,.orka.jolt{animation:none}}
+/* ---------- v3.4: host app + separate ax_ganes kit (Sidekick / Gemini in Chrome / Claude in Chrome style) ---------- */
+#tab{background:#0B0620}
+.app{padding:10px;gap:0}
+.host{flex:1;min-width:0;display:flex;border-radius:14px;overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.04)}
+.mainc:before,.mainc:has(.home):before{display:none}
+.host .content{padding:18px 22px 30px}
+.host .top .btn{cursor:default}
+.stats .stat:nth-child(1),.stats .stat:nth-child(4),.stats .stat:nth-child(8){background:#EEEAF6}
+.stats .stat:nth-child(2),.stats .stat:nth-child(3){background:#E9F2EE}
+.stats .stat:nth-child(5),.stats .stat:nth-child(7){background:#F5EFE6}
+.stats .stat:nth-child(6){background:#F6EBEB}
+/* the kit: its own rounded card, 10 px away from the host */
+:root{--panelW:380px}
+body.ax-open .ax{width:calc(var(--panelW) + 10px);max-width:calc(var(--panelW) + 10px)}
+.ax{transition:width .5s cubic-bezier(.16,1,.3,1),max-width .5s cubic-bezier(.16,1,.3,1)}
+.axin{margin:0 0 0 10px;height:100%;border-radius:16px;border:0;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
+.axin.enter{animation:kitIn .6s cubic-bezier(.16,1,.3,1) both}
+@keyframes kitIn{from{opacity:0;transform:translateX(28px) scale(.98)}to{opacity:1;transform:none}}
+.axin.enter .axb>*{animation:upIn .55s cubic-bezier(.16,1,.3,1) both}
+.axin.enter .axb>*:nth-child(1){animation-delay:.18s}.axin.enter .axb>*:nth-child(2){animation-delay:.3s}.axin.enter .axb>*:nth-child(3){animation-delay:.42s}
+.axin.enter .hint button{animation:upIn .5s cubic-bezier(.16,1,.3,1) both}
+.axin.enter .hint button:nth-child(1){animation-delay:.5s}.axin.enter .hint button:nth-child(2){animation-delay:.58s}
+@keyframes upIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.axh img{animation:breathe 3.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:translateY(-1.5px) scale(1.03)}}
+.axin.enter .hi h2{background:linear-gradient(90deg,var(--text) 40%,var(--pL) 50%,var(--text) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 1.6s .3s ease-out both}
+@keyframes shine{from{background-position:100% 0}to{background-position:0 0}}
+.fc{transition:box-shadow .25s,transform .25s}
+.fc:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(61,31,135,.12)}
+.fc.swap{animation:swapIn .45s cubic-bezier(.16,1,.3,1)}
+@keyframes swapIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.msg.new{animation:msgIn .4s cubic-bezier(.2,.9,.3,1.25) both}
+.msg.u.new{transform-origin:100% 100%}.msg.a.new{transform-origin:0 100%}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+.btn{transition:transform .15s,background .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.hint button{transition:transform .18s,border-color .18s,color .18s}
+.hint button:hover{transform:translateY(-1px)}
+/* Gemini-like living border on the composer when focused or listening */
+@property --ga{syntax:'<angle>';inherits:false;initial-value:0deg}
+.comp{border:1.5px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(rgba(31,21,67,.14),rgba(31,21,67,.14)) border-box}
+.comp:focus-within,.comp.lis{box-shadow:0 6px 20px rgba(61,31,135,.12);background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--ga),#5B3EAA,#E55A1F,#3A88F0,#5B3EAA) border-box;animation:ring 3s linear infinite}
+@keyframes ring{to{--ga:360deg}}
+@media (prefers-reduced-motion:reduce){.axin.enter,.axin.enter .axb>*,.axin.enter .hint button,.fc.swap,.msg.new,.axh img,.comp{animation:none!important}}
+
+/* ---------- v3.4.1: soft bubble open/close, Orka melts into the room, Focus page unfolds from the room ---------- */
+/* the room grows like a soap bubble from where Orka sits (bottom-right), no hard edge, no snap */
+.ax{transition:width .62s cubic-bezier(.22,1,.36,1),max-width .62s cubic-bezier(.22,1,.36,1)}
+.axin.enter{animation:bubbleIn .78s cubic-bezier(.22,1,.36,1) both}
+@keyframes bubbleIn{
+  0%{clip-path:circle(0% at calc(100% - 56px) calc(100% - 92px));opacity:.2;transform:scale(.96);filter:blur(6px)}
+  45%{opacity:1;filter:blur(0)}
+  100%{clip-path:circle(150% at calc(100% - 56px) calc(100% - 92px));opacity:1;transform:none;filter:none}}
+.axin.leaving{animation:bubbleOut .44s cubic-bezier(.55,0,.75,.2) both;pointer-events:none}
+@keyframes bubbleOut{
+  0%{clip-path:circle(150% at calc(100% - 56px) calc(100% - 92px));opacity:1}
+  100%{clip-path:circle(0% at calc(100% - 56px) calc(100% - 92px));opacity:.3;transform:scale(.97);filter:blur(4px)}}
+.axin.enter .axb>*{animation-duration:.6s}
+.axin.enter .axb>*:nth-child(1){animation-delay:.32s}.axin.enter .axb>*:nth-child(2){animation-delay:.42s}.axin.enter .axb>*:nth-child(3){animation-delay:.52s}
+.axin.enter .axf{animation:upIn .6s .4s cubic-bezier(.16,1,.3,1) both}
+/* Orka shrinks, floats up and softly fades toward the room — and comes back the same way */
+.orka{transition:opacity .5s cubic-bezier(.22,1,.36,1),scale .55s cubic-bezier(.22,1,.36,1),translate .55s cubic-bezier(.22,1,.36,1),filter .5s,width .4s,height .4s;transform-origin:50% 100%}
+/* the shrink sits on the head, not on .orka — scaling .orka would also scale its translate() and make it jump */
+.orka .ohd,.orka .shadow{transition:scale .55s cubic-bezier(.22,1,.36,1);transform-origin:50% 100%}
+body.ax-open.orka-dock .orka{opacity:0;translate:-6px -40px;filter:blur(3px)}
+body.ax-open.orka-dock .orka .ohd,body.ax-open.orka-dock .orka .shadow{scale:.45}
+/* Focus page: belongs to the room — slides out of it to the left; the client's own menu stays visible */
+.fpage{position:absolute;z-index:3;top:10px;bottom:10px;left:252px;right:calc(var(--panelW) + 20px);border-radius:16px;overflow:hidden;
+  background:radial-gradient(70% 60% at 100% 0%,rgba(91,62,170,.10),transparent 70%),#F7F5FC;box-shadow:0 0 0 1px rgba(61,31,135,.12),0 24px 60px rgba(15,7,38,.28);display:flex;flex-direction:column}
+.fpage.enter{animation:fpIn .7s .12s cubic-bezier(.22,1,.36,1) both}
+@keyframes fpIn{from{clip-path:inset(0 0 0 100% round 16px);transform:translateX(36px);opacity:.4}to{clip-path:inset(0 0 0 0 round 16px);transform:none;opacity:1}}
+.fpage.leaving{animation:fpOut .44s cubic-bezier(.55,0,.75,.2) both;pointer-events:none}
+@keyframes fpOut{from{clip-path:inset(0 0 0 0 round 16px)}to{clip-path:inset(0 0 0 100% round 16px);transform:translateX(36px);opacity:.3}}
+.fpage.enter .home>*{animation:upIn .6s cubic-bezier(.16,1,.3,1) both}
+.fpage.enter .home>*:nth-child(1){animation-delay:.38s}.fpage.enter .home>*:nth-child(2){animation-delay:.48s}.fpage.enter .home>*:nth-child(3){animation-delay:.58s}.fpage.enter .home>*:nth-child(4){animation-delay:.66s}
+.fptop{display:flex;align-items:center;gap:8px;padding:12px 16px 0}
+.fptag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 4px;border-radius:14px;background:rgba(61,31,135,.08);color:var(--a);font-size:12px;font-weight:600}
+.fptag img{width:22px;height:22px}
+.fptop .sp{flex:1}
+.fpk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.fpage .home{flex:1;overflow-y:auto;padding:6px 36px 28px;width:100%;max-width:760px}
+.fpage .hello .date{color:var(--text3)}.fpage .hello h1{color:var(--text)}.fpage .hello p{color:var(--text2)}
+.fpage .focus .btn.pri{background:var(--ink);border-color:var(--ink)}
+.fpage .sem .lnk{font-size:12.5px}
+.axh .ib.on{background:var(--a08);color:var(--a)}
+.fc.flash{animation:flash 1.1s cubic-bezier(.22,1,.36,1)}
+@keyframes flash{0%{box-shadow:0 0 0 0 rgba(91,62,170,.45);transform:translateX(14px);opacity:.4}40%{box-shadow:0 0 0 8px rgba(91,62,170,.12);transform:none;opacity:1}100%{box-shadow:0 6px 18px rgba(61,31,135,.08)}}
+@media (prefers-reduced-motion:reduce){.axin.enter,.axin.leaving,.fpage.enter,.fpage.leaving,.fpage.enter .home>*,.fc.flash{animation:none!important}.orka{transition:opacity .2s}}
+/* ---------- v3.4.2: one grid for the ax_ganes kit ----------
+   Spacing = Fibonacci steps (5 · 8 · 13 · 21 · 34), so every gap is ~1.618× the one below.
+   Type = 1.25 scale on a 13 px base (11 · 13 · 16 · 20 · 25).
+   Width: the space right of the client menu is split by the golden ratio — Focus (B) 0.618 : room (C) 0.382. */
+:root{--panelW:354px;--g1:5px;--g2:8px;--g3:13px;--g4:21px;--g5:34px;--fxs:11px;--fs:13px;--fm:16px;--fl:20px;--fxl:25px;--rK:16px;--rC:13px}
+/* C — the room */
+.axmark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(135deg,#5B3EAA 0%,#3D1F87 55%,#E55A1F 130%);box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+.axh{min-height:68px;padding:var(--g3) var(--g3) var(--g3) var(--g4);gap:var(--g3)}
+.axh b{display:block;font:600 var(--fm)/1.25 var(--display)}
+.axh small{font-size:var(--fxs);margin-top:2px}
+.axh .ib{width:34px;height:34px;border-radius:10px}
+.axb{padding:var(--g4);gap:var(--g3)}
+.hi h2{font-size:var(--fl);line-height:1.25}
+.hi p{font-size:var(--fs);line-height:1.6;margin-top:var(--g2)}
+.hi0{font-size:var(--fs);line-height:1.6;color:var(--text3)}
+.fc{padding:var(--g4);border-radius:var(--rC)}
+.fc h4{font-size:var(--fm);margin:var(--g3) 0 var(--g2)}
+.fc p,.fc .draft,.fc .prev .r{font-size:var(--fs)}
+.fc .why{margin-top:var(--g2)}
+.fc .acts{margin-top:var(--g4);gap:var(--g2)}
+.msg{font-size:var(--fs);line-height:1.6;padding:var(--g2) var(--g3);border-radius:var(--rC)}
+.axf{position:relative;padding:var(--g3) var(--g4) var(--g4)}
+.comp{min-height:48px;border-radius:var(--rC);padding:var(--g1) var(--g1) var(--g1) var(--g2)}
+.comp input{font-size:var(--fs)}
+.hint{gap:var(--g2);margin-top:var(--g3)}
+.hint button{height:29px;padding:0 var(--g3);font-size:var(--fxs)}
+.plusm{position:absolute;left:var(--g4);bottom:calc(100% - var(--g1));z-index:5;min-width:180px;padding:var(--g1);border-radius:var(--rC);background:#fff;
+  box-shadow:0 12px 32px rgba(15,7,38,.16),0 0 0 1px rgba(31,21,67,.08);animation:upIn .3s cubic-bezier(.16,1,.3,1)}
+.plusm button{display:flex;align-items:center;gap:var(--g2);width:100%;height:34px;padding:0 var(--g3);border:0;border-radius:var(--g2);background:none;font-size:var(--fs);color:var(--text);text-align:left}
+.plusm button:hover{background:var(--surf1)}
+.plusm svg{color:var(--text3)}
+/* B — Focus: sits flush against C, so B + C read as one surface */
+.fpage{left:250px;right:calc(var(--panelW) + 10px);border-radius:var(--rK);transition:border-radius .55s cubic-bezier(.22,1,.36,1)}
+.axin{transition:border-radius .55s cubic-bezier(.22,1,.36,1),box-shadow .55s}
+body.fp-on .fpage{border-radius:var(--rK) 0 0 var(--rK)}
+body.fp-on .axin{border-radius:0 var(--rK) var(--rK) 0;box-shadow:inset 1px 0 0 rgba(61,31,135,.10)}
+@keyframes fpIn{from{clip-path:inset(0 0 0 100%);transform:translateX(34px);opacity:.4}to{clip-path:inset(0 0 0 0);transform:none;opacity:1}}
+@keyframes fpOut{from{clip-path:inset(0 0 0 0)}to{clip-path:inset(0 0 0 100%);transform:translateX(34px);opacity:.3}}
+.fptop{padding:var(--g4) var(--g5) 0}
+.fpk{font-size:var(--fxs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.fptop .btn{font-size:var(--fs)}
+.fpage .home{max-width:none;padding:var(--g4) var(--g5) var(--g5);gap:var(--g4)}
+.fpage .hello .date{font-size:var(--fxs)}
+.fpage .hello h1{font-size:var(--fxl);line-height:1.2;margin-top:var(--g2)}
+.fpage .hello p{font-size:var(--fs);line-height:1.6;margin-top:var(--g2)}
+.fpage .focus{padding:var(--g4);border-radius:var(--rC)}
+.fpage .focus .fh{font-size:var(--fxs)}
+.fpage .focus h2{font-size:var(--fl);line-height:1.3;margin:var(--g3) 0 var(--g2)}
+.fpage .focus p,.fpage .focus .draft{font-size:var(--fs);line-height:1.6}
+.fpage .focus .draft{margin-top:var(--g3);padding:var(--g3)}
+.fpage .src2{margin-top:var(--g3);font-size:var(--fxs)}
+.fpage .fa{margin-top:var(--g4);gap:var(--g2)}
+.fpage .btn.big{height:40px;padding:0 var(--g4);font-size:var(--fs)}
+.fpage .secs{gap:var(--g3)}
+.fpage .mini{padding:var(--g3) var(--g4);gap:var(--g3);border-radius:var(--rC)}
+.fpage .mini b{font-size:var(--fs)}.fpage .mini small{font-size:var(--fxs)}
+.fpage .sem{gap:var(--g2);font-size:var(--fs)}
+.focus.prog{background:rgba(255,255,255,.55);border:1px dashed rgba(61,31,135,.25);box-shadow:none}
+.focus.prog .fh em{color:var(--a);font-weight:600}
+/* ---------- v3.4.3: Dynamic-Island-style open — calm and classy ----------
+   Orka's spot becomes a small pill that grows into the room in one fluid move (iOS spring curve, no blur,
+   no bounce, no circle). The content fades in only after the shape has settled. Closing is the same, reversed. */
+:root{--island:cubic-bezier(.32,.72,0,1)}
+.axin.enter{animation:islandIn .52s var(--island) both}
+@keyframes islandIn{
+  0%{clip-path:inset(calc(100% - 118px) 18px 46px calc(100% - 90px) round 36px);opacity:1}
+  100%{clip-path:inset(0 0 0 0 round 0px);opacity:1}}
+.axin.leaving{animation:islandOut .38s var(--island) both;pointer-events:none}
+@keyframes islandOut{
+  0%{clip-path:inset(0 0 0 0 round 0px);opacity:1}
+  80%{opacity:1}
+  100%{clip-path:inset(calc(100% - 118px) 18px 46px calc(100% - 90px) round 36px);opacity:0}}
+/* content: a quiet fade, a hair of lift, after the shape */
+.axin.enter .axb>*,.axin.enter .axf,.axin.enter .axh>*{animation:calmIn .32s ease-out both}
+.axin.enter .axh>*{animation-delay:.2s}
+.axin.enter .axb>*:nth-child(1){animation-delay:.24s}.axin.enter .axb>*:nth-child(2){animation-delay:.28s}.axin.enter .axb>*:nth-child(3){animation-delay:.32s}
+.axin.enter .axf{animation-delay:.3s}
+.axin.enter .hint button{animation:none}
+.axin.enter .hi h2{animation:none;background:none;color:var(--text)}
+@keyframes calmIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+/* Orka simply hands over to the island: quick fade + slight shrink in place */
+.orka{transition:opacity .22s ease-out,translate .3s var(--island),filter .22s,width .4s,height .4s}
+.orka .ohd,.orka .shadow{transition:scale .3s var(--island)}
+body.ax-open.orka-dock .orka{opacity:0;translate:0 0;filter:none}
+body.ax-open.orka-dock .orka .ohd,body.ax-open.orka-dock .orka .shadow{scale:.8}
+/* Focus: slides out of the room with the same curve, shorter */
+.fpage.enter{animation:fpIn .5s .08s var(--island) both}
+.fpage.leaving{animation:fpOut .34s var(--island) both}
+.fpage.enter .home>*{animation:calmIn .32s ease-out both}
+/* one-line labels: never wrap, never break the layout */
+.fc .tg,.focus .fh{display:flex;align-items:center;gap:var(--g2);white-space:nowrap;min-width:0}
+.fc .tg span,.focus .fh span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.fc .tg em,.focus .fh em{flex:none}
+.axh>span:not(.sp):not(.axmark){min-width:0}
+.axh b,.axh small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpage .sem{flex-wrap:nowrap;white-space:nowrap;overflow:hidden}
+.mini b,.mini small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini>span:last-child{min-width:0}
+.hint button,.fptop .btn{white-space:nowrap}
+.fpage .secs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.mini{min-width:0}
+@media (prefers-reduced-motion:reduce){.axin.enter,.axin.leaving,.fpage.enter,.fpage.leaving{animation:none!important}}
+
+/* ---------- v3.4.4: Sidekick-style push ----------
+   The room slides in from the right edge and pushes the client page (and Focus) to the left;
+   Close does the exact reverse. One width animation, content anchored to the right — nothing pops. */
+:root{--push:cubic-bezier(.25,.8,.25,1)}
+.ax{display:flex;justify-content:flex-end;transition:width .45s var(--push),max-width .45s var(--push)}
+.axin{flex:none}
+.axin.enter{animation:pushIn .45s var(--push) both}
+@keyframes pushIn{from{opacity:.6}to{opacity:1}}
+.axin.leaving{animation:pushOut .42s var(--push) both;pointer-events:none}
+@keyframes pushOut{from{opacity:1}to{opacity:.6}}
+.axin.enter .axb>*,.axin.enter .axf,.axin.enter .axh>*{animation:calmIn .3s .18s ease-out both}
+.fpage{transition:right .45s var(--push),border-radius .55s var(--island)}
+.fpage.enter{animation:fpIn .45s var(--push) both}
+.fpage.leaving{animation:fpOut .42s var(--push) both}
+.orka{transition:opacity .2s ease-out,translate .3s var(--push),filter .2s,width .4s,height .4s}
+
+/* ---------- v3.4.5: matched to the Sidekick reference recording (frame by frame) ----------
+   Open  (~0.3 s): the page's right edge moves left; the room does NOT slide — it is uncovered in place
+                   and fades up from the dark background to full white.
+   Close (~0.3 s): the room keeps its width and slides out to the right as one piece while the page widens. */
+:root{--sk:cubic-bezier(.2,0,0,1)}
+.ax{transition:width .3s var(--sk),max-width .3s var(--sk)}
+.axin.enter{animation:skIn .42s var(--sk) both}
+@keyframes skIn{0%{opacity:0}25%{opacity:.25}100%{opacity:1}}
+.axin.enter .axb>*,.axin.enter .axf,.axin.enter .axh>*{animation:skFade .25s .18s ease-out both}
+@keyframes skFade{from{opacity:0}to{opacity:1}}
+.axin.leaving{animation:skOut .3s var(--sk) both;pointer-events:none}
+@keyframes skOut{from{transform:none}to{transform:translateX(calc(100% + 10px))}}
+.fpage.enter{animation:skIn .42s var(--sk) both}
+.fpage.leaving{animation:skOut .3s var(--sk) both}
+
+/* ---------- v3.4.6: open = the close, mirrored ----------
+   The room keeps its width and slides in from the right edge (right → left) while the page narrows.
+   Hiding Focus goes back to the earlier fold: it tucks into the room toward the right. */
+.axin.enter{animation:skInSlide .3s var(--sk) both}
+@keyframes skInSlide{from{transform:translateX(calc(100% + 10px))}to{transform:none}}
+.axin.enter .axb>*,.axin.enter .axf,.axin.enter .axh>*{animation:none}
+.fpage.leaving{animation:fpOut .34s var(--island) both}
+
+/* self-test only: measure the settled layout even when a background tab slows animations down */
+body.st-still .ax,body.st-still .axin,body.st-still .fpage{transition:none!important;animation:none!important}
+
+/* ---------- v3.5 alignment: same canvas, type, lines and Orka as the intro; Ganes' dark sidebar stays as the client app ---------- */
+:root{--body:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;--display:'Plus Jakarta Sans',system-ui,sans-serif;--desk:#FBFAFE;--bg:#FBFAFE;--surf1:#F4F0FB;--surf2:#ECE6F5;--t4:#6A5D8C;--t5:#9389AC;--text3:#6A5D8C;
+  --border:#E4DCF2;--border2:#D9D2E8;--strong:#C4BAD9;--bd:#E4DCF2;--bd2:#D9D2E8;--bd3:#D9D2E8;--ink:#3D1F87;--inkH:#2C1664}
+body{background:radial-gradient(60vmax 44vmax at 50% 38%,rgba(182,170,207,.22),transparent 70%),radial-gradient(38vmax 30vmax at 92% 96%,rgba(229,90,31,.06),transparent 70%),#FBFAFE;background-attachment:fixed;letter-spacing:-.01em}
+#tab{background:transparent;box-shadow:none;border-radius:18px}
+.pocb,.poc{display:none!important}
+.hello h1{font-weight:800;letter-spacing:-.045em}.focus h2,.hi h2{font-weight:800;letter-spacing:-.035em}
+.card h3,.top h1,.fc h4,.modal header h3,.axh b{font-weight:700;letter-spacing:-.02em}
+.card{border-radius:18px;box-shadow:none}.focus{border-radius:18px;box-shadow:0 10px 30px rgba(26,18,53,.07)}
+.btn{border-radius:12px;font-weight:700}.btn.big{height:44px;border-radius:12px}
+.orka .ohd>img:not(.obase),.orka .face{display:none}
+.orka .obase{position:absolute;inset:0;width:100%;height:100%}
+.orka .fl{position:absolute;width:25%;height:25%;margin:-12.5% 0 0 -12.5%;will-change:transform;pointer-events:none}
+.orka .el{left:28.9%;top:52.3%}.orka .er{left:67.9%;top:52.3%}.orka .mo{left:48.4%;top:65%}
+.orka .fl svg{width:100%;height:100%;overflow:visible;fill:#FFE6BC}
+.orka .fl g{opacity:0;transform:scale(.72);transition:opacity .17s ease,transform .26s cubic-bezier(.3,1.5,.5,1)}.orka .fl g.on{opacity:1;transform:none}
+.orka .fl .s{fill:none;stroke:#FFE6BC;stroke-width:6.5;stroke-linecap:round}
+
+#wrap{display:block}#tab{position:absolute;left:0;top:0;border-radius:0}
+.host,.mainc,.content,.content>*,.grid,.grid>*{min-width:0}.content>*{max-width:100%}.host{flex:1}.mainc{flex:1}body.ax-open .content{padding-left:20px;padding-right:20px}.content{overflow-x:hidden}.btn{white-space:nowrap}.fc .acts{flex-wrap:wrap}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr))}body.ax-open .stats{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding-bottom:110px}body.ax-open .r2,body.ax-open .r11{grid-template-columns:minmax(0,1fr)}
+.stub{max-width:560px;margin:12vh auto 0;text-align:center}.stub h2{margin:0 0 8px;font:800 30px/1.15 var(--display);letter-spacing:-.04em}.stub p{margin:0 auto 18px;max-width:440px;font-size:14px;color:var(--text2)}.stub .row0{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.stub small{display:block;margin-top:14px;color:var(--text3)}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="tab">
+<div class="app" id="app"></div>
+<div class="veil" id="veil" aria-hidden="true"></div>
+<button class="orka" id="orka" type="button" aria-label="ax_ganes, open the assistant"><span class="shadow" id="orkaSh"></span><span class="ohd" id="orkaHd"><img id="orkaImg" src="assets/orka/orka_01_idle.png" alt=""><span class="face"><img id="orkaFace" src="assets/orka/orka_01_idle.png" alt=""></span></span><span class="zz" aria-hidden="true"><b>z</b><b>z</b><b>z</b></span></button>
+<div id="bubble"></div>
+<div id="layer"></div>
+</div></div>
+<video class="cam" id="camv" playsinline muted></video>
+<button class="pocb" id="pocB" type="button">POC tools <kbd>`</kbd></button>
+<aside class="poc" id="poc" aria-label="POC tools"></aside>
+
+<script>
+/* ===================================================================
+   AX GANES v3.4 · Kit
+   Ganes SaaS Overview stays as it is (menus + design system from the
+   ganes-owner source). ax_ganes lives in a right panel (closed by default)
+   and in Orka, the mascot, who nudges, follows the cursor and guards privacy.
+   =================================================================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ORKA=n=>`assets/orka/orka_${n}.png`;
+const EXPR={idle:'01_idle',blink:'02_blink',happy:'03_happy',content:'04_content',delighted:'05_delighted',listening:'06_listening',thinking:'07_thinking',confused:'08_confused',surprised:'09_surprised',sorry:'10_sorry',shy:'11_shy',focus:'12_focus',sleepy:'02_blink',talk1:'13_speaking_open',talk2:'14_speaking_round',talk3:'15_speaking_wide'};
+
+/* line icons, 20px grid, 1.6 stroke — drawn for Ganes, not copied from any product */
+const I={
+ /* v3.4.7 Focus toggle: a window with a side panel on the left; the arrow says where Focus goes */
+ fpopen:'<rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 4v12"/><path d="M14 8l-2 2 2 2"/>',
+ fpclose:'<rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 4v12"/><path d="M12 8l2 2-2 2"/>',
+ overview:'<rect x="3.5" y="3.5" width="6" height="7" rx="1.6"/><rect x="10.5" y="3.5" width="6" height="4" rx="1.6"/><rect x="10.5" y="9.5" width="6" height="7" rx="1.6"/><rect x="3.5" y="12.5" width="6" height="4" rx="1.6"/>',
+ chat:'<path d="M4 5.5A2 2 0 0 1 6 3.5h8a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-3.5 3v-3H6a2 2 0 0 1-2-2z"/><path d="M7.5 7.5h5M7.5 10h3"/>',
+ sim:'<rect x="3.5" y="3.5" width="13" height="13" rx="3"/><path d="M8.5 7.3v5.4l4.3-2.7z"/>',
+ book:'<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H15v12H5.5A1.5 1.5 0 0 0 4 16.5z"/><path d="M4 16.5A1.5 1.5 0 0 0 5.5 18H15v-3"/><path d="M7.5 6.5h4.5"/>',
+ box:'<path d="M10 2.8l6.5 3.4v7.6L10 17.2l-6.5-3.4V6.2z"/><path d="M3.8 6.3L10 9.6l6.2-3.3M10 9.6v7.4"/>',
+ flow:'<rect x="3" y="3.5" width="5" height="4" rx="1.2"/><rect x="12" y="12.5" width="5" height="4" rx="1.2"/><path d="M5.5 7.5v3a2 2 0 0 0 2 2H12"/><circle cx="14.5" cy="5.5" r="2"/>',
+ plug:'<path d="M7.5 3v3.5M12.5 3v3.5"/><path d="M5.5 6.5h9v2.5a4.5 4.5 0 0 1-9 0z"/><path d="M10 13.5V17"/>',
+ spark:'<path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M15.5 13.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>',
+ coin:'<rect x="3" y="5" width="14" height="10" rx="2"/><path d="M3 8.5h14M6.5 12h2.5"/>',
+ team:'<circle cx="7.5" cy="7" r="2.5"/><path d="M3 16a4.5 4.5 0 0 1 9 0"/><circle cx="13.8" cy="7.8" r="2"/><path d="M13 12a3.8 3.8 0 0 1 4 4"/>',
+ cog:'<circle cx="10" cy="10" r="2.4"/><path d="M10 2.8v2M10 15.2v2M2.8 10h2M15.2 10h2M4.9 4.9l1.4 1.4M13.7 13.7l1.4 1.4M4.9 15.1l1.4-1.4M13.7 6.3l1.4-1.4"/>',
+ search:'<circle cx="9" cy="9" r="5.2"/><path d="M13 13l3.5 3.5"/>',
+ side:'<rect x="3" y="4" width="14" height="12" rx="2.2"/><path d="M8 4v12"/>',
+ chev:'<path d="M8 6l4 4-4 4"/>', down:'<path d="M6 8l4 4 4-4"/>',
+ x:'<path d="M5.5 5.5l9 9M14.5 5.5l-9 9"/>', plus:'<path d="M10 4.5v11M4.5 10h11"/>',
+ mic:'<rect x="7.5" y="3" width="5" height="9" rx="2.5"/><path d="M5 9.5a5 5 0 0 0 10 0M10 14.5V17"/>',
+ send:'<path d="M4 10l12-6-4.5 12-2.2-4.8z"/>', expand:'<path d="M12 3.5h4.5V8M8 16.5H3.5V12M16.5 3.5L11 9M3.5 16.5L9 11"/>',
+ edit:'<path d="M12.5 4.5l3 3L8 15H5v-3z"/>', check:'<path d="M5 10.5l3.2 3L15 6.5"/>', up:'<path d="M10 4v12M5 9l5-5 5 5"/>',
+ thumbu:'<path d="M7 9l3-5.5a1.6 1.6 0 0 1 2.4 1.7L11.8 8H15a1.6 1.6 0 0 1 1.6 1.9l-1.1 5A1.6 1.6 0 0 1 14 16.2H7z"/><path d="M4 9h3v7.2H4z"/>',
+ thumbd:'<path d="M13 11l-3 5.5a1.6 1.6 0 0 1-2.4-1.7l.6-2.8H5a1.6 1.6 0 0 1-1.6-1.9l1.1-5A1.6 1.6 0 0 1 6 3.8h7z"/><path d="M16 11h-3V3.8h3z"/>',
+ copy:'<rect x="7" y="7" width="9" height="9" rx="1.8"/><path d="M13 4.5H5.5A1.5 1.5 0 0 0 4 6v7.5"/>',
+ cam:'<rect x="3" y="5.5" width="10.5" height="9" rx="2"/><path d="M13.5 9l3.5-2v6l-3.5-2"/>',
+ hand:'<path d="M7 10V5a1.2 1.2 0 0 1 2.4 0v4M9.4 9V4a1.2 1.2 0 0 1 2.4 0v5M11.8 9V5a1.2 1.2 0 0 1 2.4 0v6.5c0 3-2 5-4.8 5-2.2 0-3.3-1-4.4-2.6l-2-3a1.2 1.2 0 0 1 2-1.3L7 10"/>',
+ eye:'<path d="M2.5 10s2.8-5 7.5-5 7.5 5 7.5 5-2.8 5-7.5 5-7.5-5-7.5-5z"/><circle cx="10" cy="10" r="2.2"/>',
+ out:'<path d="M12 4h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 15 16h-3M8.5 13.5L5 10l3.5-3.5M5 10h9"/>',
+ user:'<circle cx="10" cy="7" r="3"/><path d="M4 16.5a6 6 0 0 1 12 0"/>',
+ bell:'<path d="M5.5 13.5V9a4.5 4.5 0 0 1 9 0v4.5l1.5 1.5H4z"/><path d="M8.5 17h3"/>',
+ alert:'<path d="M10 3.5l7 12.5H3z"/><path d="M10 8.5v3.5M10 14.2v.1"/>', clock:'<circle cx="10" cy="10" r="6.5"/><path d="M10 6.5V10l2.5 1.5"/>'
+};
+const ic=(n,s=18,w=1.6)=>`<svg aria-hidden="true" width="${s}" height="${s}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+
+/* ---------- Ganes navigation, exactly as DashboardLayout.jsx (order, names, sub-items) ---------- */
+const NAV=[
+ {id:'overview',l:'Overview',i:'overview',href:'index.html'},
+ {id:'conversations',l:'Conversations',i:'chat',href:'conversations.html',count:1,children:[['Needs Attention','conversations.html']]},
+ {id:'simulator',l:'Chat Simulator',i:'sim',href:'chat-simulator.html'},
+ {id:'kb',l:'Knowledge Base',i:'book',href:'knowledge-base.html'},
+ {id:'products',l:'Products',i:'box',href:'products.html'},
+ {id:'flow',l:'Chatbot Flow',i:'flow',href:'chatbot-flow.html'},
+ {id:'addon',l:'Add-ons',i:'plug',href:'add-ons.html',dots:true,children:[['Order Tracking','add-ons.html',1],['Promos & Events','add-ons.html',1],['Support Tickets','add-ons.html',0],['Add to Cart','add-ons.html',0],['Live Agent','add-ons.html',1]]},
+ {id:'services',l:'AI Services',i:'spark',href:'ai-service.html',children:[['Discovery Readiness','discovery-readiness.html'],['Answer Gaps','ai-service.html']]},
+ {id:'billing',l:'Billing',i:'coin',href:'billing.html'},
+ {id:'team',l:'Team',i:'team',href:'members.html'},
+ {id:'settings',l:'Settings',i:'cog',href:'settings.html',children:[['Store & Company Info','settings.html'],['Persona & Widget','settings.html']]}
+];
+
+/* ---------- Toko Ada Aja sample data (Overview, 7 days) ---------- */
+const STATS=[['Conversations, 7 days','1,284','+12%','up'],['Auto-resolved','86%','+3 pts','up'],['Customer satisfaction','92%','stable','st'],['Average response','1.8s','-0.3s','up'],
+ ['Handed to a human','37','+5','dn'],['Answer gaps','9','+2','dn'],['Blocked','4','stable','st'],['Errors','2','-1','up']];
+const BARS=[['Mon',148],['Tue',162],['Wed',171],['Thu',189],['Fri',236],['Sat',214],['Sun',164]];
+const TOPICS=[['Kitchen appliances',31],['Returns & exchange',22],['Shipping & delivery',18],['Installments',12],['Store hours',9]];
+const RECENT=[['RK','Rina Kusuma','Can I return a rice cooker that arrived damaged?','Needs a person','r'],['BS','Budi S.','Is Rice Cooker Mini available?','Answered','g'],['DA','Dewi A.','Do you deliver to Bekasi?','Answered','g'],['FH','Fajar H.','Cicilan 0% pakai kartu apa saja?','Error','a']];
+
+/* ---------- industry packs: the same read → prepare → approve work, in the business chosen during setup (all sample data) ---------- */
+const QS=new URLSearchParams(location.search);
+const task=(name,tag,src,title,body,draft,impact,done)=>({id:'reply',urg:1,tag,src,title,body,draft,cta:'Review reply',risk:'R3',impact,approve:'Send reply',done,log:'Conversations · reply sent by AX for Andi'});
+const fix=(tag,src,title,body,rows,cta,done,log)=>({id:'stock',tag,src,title,body,cta,risk:'R2',rows,approve:'Approve update',done,log:log+' by AX for Andi · undo available'});
+const docT=(file,body,done)=>({id:'doc',tag:'Document failed',src:'Knowledge Base',title:`“${file}” couldn’t be read`,body,cta:'Read it again',risk:'R2',rows:[['File',file],['Method',['Parse','Text recognition']],['Pages','3']],approve:'Approve',done,log:'Knowledge Base · KB-06 by AX for Andi'});
+const PACKS={
+ Beauty:{co:'Glow Beauty',topics:[['Skincare routines',33],['Ingredients & allergies',24],['Shipping & delivery',17],['Returns',12],['Promos',8]],
+  recent:[['MR','Mira Rahma','My skin reacted to the serum. What should I do?','Needs a person','r'],['SA','Sinta A.','Is Rose Toner available?','Answered','g'],['NW','Nadia W.','Is this safe for sensitive skin?','Answered','g'],['TP','Tari P.','Promo 2+1 pakai kode apa?','Error','a']],
+  tasks:[task('Mira','Customer waiting · 12 min','Conversations › Needs Attention','Mira reported a skin reaction','“My skin reacted to the serum. What should I do?” I drafted a careful reply and flagged the batch for your team.','Hi Mira, I’m sorry to hear that. Please stop using the serum and see a doctor if it continues. Could you share the batch number so our team can follow up?','This message goes to Mira on your website chat. It can’t be unsent.','Reply sent to Mira. Batch flagged.'),
+   fix('Out of stock · asked 17×','Products · Warehouse sync 08:02','Rose Toner shows 0 in stock','Shoppers asked 17 times this week. Your warehouse has 12, so the chatbot is saying “unavailable” by mistake.',[['Product','Rose Toner'],['Stock',['0','12']],['Source','Warehouse sync · today 08:02']],'Update stock','Stock updated to 12. Chatbot test passed (10/10).','Products · PR-03'),
+   docT('Ingredient List.pdf','It is a scanned image. I can read it again as text, so the chatbot can answer ingredient questions.','Ingredient List.pdf is ready. 3 pages added.')],
+  who:'Mira',stockN:'Rose Toner',stockRe:/rose toner/,stockU:'units',stockA:'Rose Toner shows <b>0</b> in Ganes, but your warehouse has <b>12</b> units (sync 08:02). Shoppers asked 17 times this week. Shall I update it?',src:'Warehouse sync · today 08:02',priceN:'Glow Serum 30 ml',priceK:'Glow Serum',priceOld:189000,
+  gaps:[['Is it safe during pregnancy?',14],['Delivery to Bekasi',9],['Vegan ingredients',6]],gapsA:'• <b>Vegan ingredients</b>: “All Glow products are free from animal ingredients.” <span class="src">Ingredient List.pdf</span><br>• <b>Delivery to Bekasi</b>: “1–2 working days, free above Rp 200.000.” <span class="src">Shipping page</span><br>• <b>Safe during pregnancy</b>: left for your team, because it needs medical review.',
+  needA:'1 customer is waiting for a person: <b>Mira</b> reported a skin reaction 12 min ago. I drafted a careful reply. Want to review it?',retA:'Your policy accepts unopened products within 14 days. Opened products are reviewed case by case. <span class="src">Return Policy.pdf</span>'},
+ Grocery:{co:'Segar Mart',topics:[['Fresh produce',29],['Delivery slots',25],['Substitutions',19],['Promos',15],['Store hours',7]],
+  recent:[['AD','Ayu D.','My milk arrived warm. Can I get a refund?','Needs a person','r'],['RH','Rudi H.','Is Fresh Milk 1L available?','Answered','g'],['LS','Lina S.','Do you deliver this afternoon?','Answered','g'],['WK','Wati K.','Promo minyak goreng masih ada?','Error','a']],
+  tasks:[task('Ayu','Customer waiting · 12 min','Conversations › Needs Attention','Ayu asked for a person','“My milk arrived warm. Can I get a refund?” I drafted a reply from your freshness policy.','Hi Ayu, I’m sorry about that. Under our freshness policy we can refund the milk today, with no need to send it back. Shall I start the refund?','This message goes to Ayu on your website chat. It can’t be unsent.','Reply sent to Ayu.'),
+   fix('Out of stock · asked 17×','Products · Branch sync 08:02','Fresh Milk 1L shows 0 in stock','Shoppers asked 17 times this week. Your branch has 40, so the chatbot is saying “unavailable” by mistake.',[['Product','Fresh Milk 1L'],['Stock',['0','40']],['Source','Branch sync · today 08:02']],'Update stock','Stock updated to 40. Chatbot test passed (10/10).','Products · PR-03'),
+   docT('Weekly Promo.pdf','It is a scanned image. I can read it again as text, so the chatbot can answer promo questions.','Weekly Promo.pdf is ready. 3 pages added.')],
+  who:'Ayu',stockN:'Fresh Milk 1L',stockRe:/fresh milk/,stockU:'units',stockA:'Fresh Milk 1L shows <b>0</b> in Ganes, but your branch has <b>40</b> units (sync 08:02). Shoppers asked 17 times this week. Shall I update it?',src:'Branch sync · today 08:02',priceN:'Cooking Oil 2L',priceK:'Cooking Oil',priceOld:34900,
+  gaps:[['Same-day delivery cut-off',14],['Halal certificates',9],['Bulk orders',6]],gapsA:'• <b>Same-day delivery cut-off</b>: “Order before 14:00 for delivery today.” <span class="src">Delivery page</span><br>• <b>Bulk orders</b>: “10% off above Rp 2.000.000.” <span class="src">Weekly Promo.pdf</span>',
+  needA:'1 customer is waiting for a person: <b>Ayu</b> asked about a refund 12 min ago. I drafted a reply from your freshness policy. Want to review it?',retA:'Your policy refunds fresh items reported within 24 hours. <span class="src">Freshness Policy.pdf</span>'},
+ 'Financial Services':{co:'Nusa Finance',topics:[['Card disputes',28],['Loan applications',24],['Fees & charges',19],['Account access',14],['Branch hours',8]],
+  recent:[['RP','Rangga P.','I don’t recognise this card charge.','Needs a person','r'],['DM','Dina M.','What documents do I need for a loan?','Answered','g'],['HT','Hendra T.','What is the admin fee?','Answered','g'],['SY','Sari Y.','Kartu saya terblokir, gimana?','Error','a']],
+  tasks:[task('Rangga','Customer waiting · 12 min','Service CRM › Needs Attention','Rangga disputed a card charge','“I don’t recognise this card charge.” I drafted a reply and prepared the dispute form for your team.','Hi Rangga, thank you for telling us. Our team will review this charge. Please check the form I prepared and confirm the details so we can open the case.','This message goes to Rangga on your website chat. It can’t be unsent.','Reply sent to Rangga. The decision stays with your team.'),
+   fix('Stuck · 5 applications','Loan system · sync 08:02','Five loan applications lack a payslip','Applicants uploaded everything else. I drafted one document request for each. The credit decision stays with your team.',[['Applications','5'],['Status',['Stuck','Waiting for document']],['Source','Loan system · today 08:02']],'Prepare requests','5 document requests sent.','Loan system · LN-03'),
+   docT('Fee Schedule.pdf','It is a scanned image. I can read it again as text, so the chatbot can answer fee questions.','Fee Schedule.pdf is ready. 3 pages added.')],
+  who:'Rangga',stockN:'stuck applications',stockRe:/application/,stockU:'',stockA:'<b>5</b> loan applications are stuck because a payslip is missing (sync 08:02). I drafted one request for each. The credit decision stays with your team. Shall I prepare them?',src:'Loan system · today 08:02',priceN:'Admin Fee',priceK:'Admin Fee',priceOld:50000,stockQ:'How many applications are stuck?',
+  gaps:[['Early loan repayment',14],['Lost card steps',9],['Foreign transaction fee',6]],gapsA:'• <b>Lost card steps</b>: “Block it in the app, then call 1500-123.” <span class="src">Help page</span><br>• <b>Foreign transaction fee</b>: “2.5% of each transaction.” <span class="src">Fee Schedule.pdf</span>',
+  needA:'1 customer is waiting for a person: <b>Rangga</b> disputed a card charge 12 min ago. I drafted a reply and prepared the form. Want to review it?',retA:'Disputes can be filed within 60 days of the statement date. <span class="src">Dispute Policy.pdf</span>'},
+};
+const P=PACKS[QS.get('ind')]||{co:'Toko Ada Aja',who:'Rina',stockN:'Rice Cooker Mini',stockRe:/rice cooker/,stockA:'Rice Cooker Mini shows <b>0</b> in Ganes, but your POS has <b>12</b> units (sync 08:02). Shoppers asked 17 times this week. Shall I update it?',src:'POS sync · today 08:02',priceN:'Power Bank 10.000 mAh',priceK:'Power Bank',priceOld:279000,gaps:[['Installments with BCA card',14],['Delivery to Bekasi',9],['Rice cooker warranty',6]],gapsA:'• <b>Installments with BCA card</b>: “0% for 3 and 6 months with BCA credit cards, min. Rp 1.000.000.” <span class="src">Promo Cicilan.pdf</span><br>• <b>Delivery to Bekasi</b>: “1–2 working days, free above Rp 500.000.” <span class="src">Shipping page</span>',needA:'1 customer is waiting for a person: <b>Rina</b> asked about returns 12 min ago. I drafted a reply from your return policy. Want to review it?',retA:'Your policy says returns within 30 days, label attached, original box. <span class="src">Kebijakan Retur.pdf</span>'};
+const CO=QS.get('co')||P.co, STOCKQ=P.stockQ||`How many ${P.stockN} are left?`, PRICEQ=`Raise ${P.priceK} price by 5%`;
+if(P.topics){TOPICS.splice(0,9,...P.topics);RECENT.splice(0,9,...P.recent)}
+
+/* ---------- ax_ganes tasks: one card at a time (CEO), from the same data ---------- */
+const TASKS=[
+ {id:'reply',urg:1,tag:'Customer waiting · 12 min',src:'Conversations › Needs Attention',title:'Rina asked for a person',body:'“Can I return a rice cooker that arrived damaged?” I drafted a reply from your return policy.',
+  draft:'Hi Rina! Yes, you can return them within 30 days. Keep the label on and send them in the original box. Shall I start the return for you?',
+  cta:'Review reply',risk:'R3',impact:'This message goes to Rina on your website chat. It can’t be unsent.',approve:'Send reply',done:'Reply sent to Rina.',log:'Conversations · reply sent by AX for Andi'},
+ {id:'stock',tag:'Out of stock · asked 17×',src:'Products · POS sync 08:02',title:'Rice Cooker Mini shows 0 in stock',body:'Shoppers asked 17 times this week. Your POS has 12 units, so the chatbot is saying “unavailable” by mistake.',
+  cta:'Update stock',risk:'R2',rows:[['Product','Rice Cooker Mini'],['Stock',['0','12']],['Source','POS sync · today 08:02']],approve:'Approve update',done:'Stock updated to 12. Chatbot test passed (10/10).',log:'Products · PR-03 by AX for Andi · undo available'},
+ {id:'doc',tag:'Document failed',src:'Knowledge Base',title:'“Promo Cicilan.pdf” couldn’t be read',body:'It is a scanned image. I can read it again as text, so the chatbot can answer installment questions.',
+  cta:'Read it again',risk:'R2',rows:[['File','Promo Cicilan.pdf'],['Method',['Parse','Text recognition']],['Pages','3']],approve:'Approve',done:'Promo Cicilan.pdf is ready. 3 pages added.',log:'Knowledge Base · KB-06 by AX for Andi'}
+];
+if(P.tasks)TASKS.splice(0,9,...P.tasks);
+const NUDGES=[
+ {t:'reply',expr:'surprised',txt:`<b>Andi, ${P.who} has been waiting 12 min.</b><br>I already drafted a reply. Want to check it?`,cta:'Show me'},
+ {t:'stock',expr:'focus',txt:P.tasks?TASKS[1].body.split('.')[0]+'. I can prepare it in one tap.':'<b>Rice Cooker Mini was asked 17×</b> but shows 0 stock. Your POS has 12. I can fix it in one tap.',cta:'Fix it'},
+ {t:null,expr:'happy',txt:'Tip: hold up ✌️ to talk to me, or just type. I read your business data, so you don’t need to explain.',cta:'Open chat'}
+];
+
+/* ---------- state ---------- */
+const DEF={panel:false,period:'7d',t:0,step:'card',done:{},chat:[],menu:false,settings:false,
+ set:{nudges:true,follow:true,gestures:true,privacy:true,voice:false},
+ cam:{on:false,mode:'sim',faces:1,status:'off'},alone:false,poc:false};
+let S=JSON.parse(JSON.stringify(DEF));
+const timers=new Set();const later=(ms,f)=>{const t=setTimeout(()=>{timers.delete(t);f()},ms);timers.add(t);return t};
+
+/* ===================== render ===================== */
+function render(){
+  const ae=document.activeElement,fid=ae&&ae.id,val=ae&&ae.value;
+  $('#app').innerHTML=ganesHost()+axPanel()+focusPage();
+  document.body.classList.toggle('ax-open',S.panel);
+  document.body.classList.toggle('orka-dock',S.panel);
+  document.body.classList.toggle('fp-on',!!(S.panel&&S.fp));
+  $('#layer').innerHTML=(S.menus?menusSheet():'')+(S.settings?settingsModal():'')+(S.toast?`<div class="toast" role="status">${S.toast}</div>`:'');
+  if(fid){const el=document.getElementById(fid);if(el){el.focus();if(val!=null&&el.value!==val)el.value=val}}
+  const b=$('.axb');if(b&&S.scroll){b.scrollTop=b.scrollHeight;S.scroll=false}
+  renderPoc();
+}
+function sidebar(){
+  const it=n=>{
+    const on=n.id===(S.page?S.page.id:'overview');
+    return `<a class="nv${on?' on':''}" href="${n.href}" data-nav="${n.id}">${ic(n.i,18)}<span>${n.l}</span>${n.count?`<span class="ct">${n.count}</span>`:''}</a>`
+      +(n.children&&n.id==='conversations'?`<div class="sub">${n.children.map(([l,h])=>`<a href="${h}">${l}<span style="margin-left:auto" class="cts">1</span></a>`).join('')}</div>`:'');
+  };
+  return `<nav class="sb" aria-label="Primary">
+   <div class="sb-logo"><span class="mark">g</span><b>Ganes</b><span class="sp"></span><button class="ib" type="button" aria-label="Collapse sidebar">${ic('side',17)}</button></div>
+   <div class="sb-search">${ic('search',15)}Search<kbd>⌘K</kbd></div>
+   ${NAV.slice(0,6).map(it).join('')}
+   <div class="sb-sec">Grow</div>
+   ${NAV.slice(6,8).map(n=>it(n)+(n.children?`<div class="sub">${n.children.map(([l,h,live])=>`<a href="${h}">${n.dots?`<i class="${live?'live':''}"></i>`:''}${l}</a>`).join('')}</div>`:'')).join('')}
+   <div class="sb-sec">Workspace</div>
+   ${NAV.slice(8).map(n=>it(n)+(n.children?`<div class="sub">${n.children.map(([l,h])=>`<a href="${h}">${l}</a>`).join('')}</div>`:'')).join('')}
+   <div class="sb-foot"><button class="sb-user" data-a="menu" type="button" aria-haspopup="menu" aria-expanded="${S.menu}"><span class="sb-av">A</span><span><b>Andi</b><small>Owner · ${CO}</small></span><span style="margin-left:auto;opacity:.5">${ic('down',16)}</span></button></div>
+  </nav>`;
+}
+/* v3.4: the left side is the host app (ganes_saas) exactly as it is — its own sidebar and Overview.
+   ax_ganes adds nothing to it. ax_ganes is a separate kit: Orka + the room on the right, like a pilot's helmet. */
+function ganesHost(){
+  const max=Math.max(...BARS.map(b=>b[1]));
+  return `<div class="host" aria-label="Ganes dashboard (host app)">${sidebar()}<div class="mainc">
+   <header class="top"><h1>${S.page?S.page.l:'Overview'}</h1><span class="sp"></span><span class="btn" aria-disabled="true">English ${ic('down',14)}</span></header>
+   <main class="content" id="main-content">${S.page?pageStub():overviewBody(max)}</main></div></div>`;
+}
+function mainCol(){
+  const max=Math.max(...BARS.map(b=>b[1]));
+  const camTxt=!S.cam.on?'Camera off':S.cam.faces>1?`${S.cam.faces} people seen`:'1 person · private';
+  return `<div class="mainc"><header class="hd">
+    <a class="brand" href="index.html" aria-label="ax_ganes Home"><span class="logo" aria-hidden="true"><img src="${ORKA('01_idle')}" alt=""></span><span><b>ax_ganes<span class="ownr" title="This page belongs to ax_ganes. Your Ganes dashboard is not changed."><i></i>for Ganes · ${CO}</span></b><small>YOUR ASSISTANT · HOME</small></span></a>
+    <nav class="nav" aria-label="Main">
+     <span class="alerts" aria-disabled="true" title="Alerts can’t be opened yet">${ic('bell',20)}Alerts<span class="badge">1</span></span>
+     <button class="hpill" data-a="menus" aria-expanded="${!!S.menus}" type="button">${ic('overview',18)}Ganes menus</button>
+     <button class="hpill me" data-a="menu" aria-expanded="${S.menu}" aria-haspopup="menu" type="button"><span class="av" aria-hidden="true">A</span>Andi${ic('down',16,2)}</button>
+     ${S.menu?userMenu():''}
+    </nav>
+   </header>
+   <main class="content" id="main-content">${S.page?pageStub():overviewBody(max)}</main></div>`;
+}
+/* Calm Overview: show only what matters now, read from role, time, activity and store state.
+   Nothing is removed: every Ganes Overview section is one click away (Show full overview). */
+function pageStub(){const p=S.page;return `<div class="stub"><h2>${p.l}</h2><p>This is your own ${p.l} page. It stays exactly as it is. ax_ganes works on top of it, so you never have to rebuild anything.</p><div class="row0"><button class="btn pri big" data-a="open" type="button">Ask ax_ganes about ${p.l}</button><button class="btn big" data-stub="home" type="button">Back to Overview</button></div><small>This prototype shows Overview only.</small></div>`}
+function overviewBody(max){
+  const hour=new Date().getHours(),part=hour<11?'morning':hour<15?'afternoon':'evening';
+  const issues=[!S.done.reply&&'1 customer is waiting for a person',!S.done.doc&&'1 document couldn’t be read',!S.done.stock&&'1 product shows the wrong stock'].filter(Boolean);
+  const C={
+   chart:`<div class="card"><h3>Conversations 7 days<span class="muted" style="font:500 11.5px var(--body)">chats/day · peak Fri 236</span></h3>
+     <div class="bars" aria-label="Conversations chart">${BARS.map(([d,v])=>`<div style="height:${Math.round(v/max*100)}%" title="${d}: ${v}"><span>${d}</span></div>`).join('')}</div></div>`,
+   feedback:`<div class="card"><h3>Customer feedback<button class="act" type="button">View →</button></h3>
+     <div class="fb"><div class="ring"><b>92%</b></div><div><div class="kv" style="gap:16px"><span>Helpful</span><b>228</b></div><div class="kv" style="gap:16px"><span>Not helpful</span><b>20</b></div><div class="muted" style="font-size:11.5px;margin-top:4px">Satisfaction rate · 248 rated</div></div></div></div>`,
+   topics:`<div class="card"><h3>Top topics</h3><div style="margin-top:10px">${TOPICS.map(([t,p])=>`<div class="topic"><span style="width:140px">${t}</span><span class="tb"><i style="width:${p*3}%"></i></span><em>${p}%</em></div>`).join('')}</div></div>`,
+   recent:`<div class="card"><h3>Recent conversations<button class="act" type="button">View all →</button></h3><div style="margin-top:6px">${RECENT.map(([a,n,m,o,c])=>`<div class="rc"><span class="av2">${a}</span><span class="x"><b>${n}</b><p>${esc(m)}</p></span><span class="pill ${c}">${o}</span></div>`).join('')}</div></div>`,
+   status:`<div class="card"><h3>Store status</h3><div style="margin-top:8px">
+     <div class="kv"><span>Chatbot</span><span class="pill g">Online</span></div><div class="kv"><span>Products indexed</span><b>146 products</b></div>
+     <div class="kv"><span>Documents / KB</span><b>14 sources · 412 chunks</b></div><div class="kv"><span>Last index</span><b>2 hr ago</b></div><div class="kv"><span>Catalog sync</span><span class="pill b">POS · 08:02</span></div></div></div>`,
+   addons:`<div class="card"><h3>Active add-ons<button class="act" type="button">Explore →</button></h3><div style="margin-top:8px">
+     <div class="kv"><span>Order Tracking</span><span class="pill g">Live</span></div><div class="kv"><span>Promos & Events</span><span class="pill g">Live</span></div><div class="kv"><span>Live Agent</span><span class="pill g">Live</span></div><div class="kv"><span>Support Tickets</span><span class="pill n">Off</span></div></div></div>`,
+   gaps:`<div class="card"><h3>Answer gaps<span class="muted" style="font:500 11px var(--body)">grouped automatically</span></h3><div style="margin-top:8px">
+     ${P.gaps.map(g=>`<div class="kv"><span>${g[0]}</span><b>×${g[1]}</b></div>`).join('')}</div>
+     <button class="assist" data-a="assist" type="button" style="margin-top:10px">${ic('spark',14)}Draft answers with ax_ganes</button></div>`,
+   questions:`<div class="card"><h3>Errored and blocked questions</h3><div style="margin-top:8px">
+     <div class="kv"><span>“Cicilan 0% pakai kartu apa saja?”</span><span class="pill a">Error ×2</span></div><div class="kv"><span>“Bisa COD ke luar Jawa?”</span><span class="pill r">Blocked ×3</span></div><div class="kv"><span>“Harga grosir untuk sekolah?”</span><span class="pill r">Blocked ×1</span></div></div></div>`,
+   geo:`<div class="card"><h3>Visitor geographic distribution</h3><div class="geo">${[['Jakarta',41],['Bekasi',17],['Bandung',12],['Surabaya',9],['Tangerang',8]].map(([c,p])=>`<div class="topic"><span style="width:90px">${c}</span><span class="tb"><i style="width:${p*2}%;background:var(--orange)"></i></span><em>${p}%</em></div>`).join('')}</div>
+     <div class="muted" style="font-size:11px;margin-top:6px">Indicative · city positions estimated from IP</div></div>`
+  };
+  const stat=([l,v,d,t])=>`<div class="card stat"><small>${l}</small><div class="v"><b>${v}</b><span class="dl ${t}">${d}</span></div></div>`;
+  const health=issues.length?`<div class="health">${ic('alert',18)}<span><b>${issues.length} ${issues.length===1?'item needs':'items need'} you</b> · ${issues.join(', ')}</span></div>`
+    :`<div class="health ok">${ic('check',18,2)}<span><b>All systems normal</b> · chatbot online, nothing needs you</span></div>`;
+  /* the one context card next to the chart comes from the store state */
+  const ctxKey=!S.done.reply?'recent':'gaps', ctxWhy=!S.done.reply?'a customer is waiting':'questions without an answer';
+  if(false){
+    const t=curTask(),left=TASKS.filter(x=>!S.done[x.id]).length;
+    const date=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const primary=t&&S.panel?`<section class="focus" aria-label="Focus"><div class="fh"><span><i></i>In progress</span></div><h2>${t.title}</h2><p>Open in ax_ganes on the right. Finish it there and the next task appears here.</p></section>`
+      :t?`<section class="focus" aria-label="Focus">
+        <div class="fh"><span class="${t.urg?'urg':''}"><i></i>${t.tag}</span><em>${left>1?`1 of ${left}`:''}</em></div>
+        <h2>${t.title}</h2><p>${t.body}</p>
+        ${t.draft?`<div class="draft"><small>ax_ganes DRAFT</small>${t.draft}</div>`:''}
+        <div class="src2">${ic('eye',13)}Source: ${t.src}</div>
+        <div class="fa"><button class="btn pri big" data-a="open" data-task="${t.id}" data-step="preview" type="button">${t.cta}</button>${left>1?`<button class="btn ghost" data-a="skiphome" type="button">Other task</button>`:''}</div></section>`
+      :`<section class="focus" aria-label="Focus"><div class="fh"><span class="okk"><i></i>All clear</span></div><h2>Nothing needs you right now</h2><p>Your chatbot is online. I’ll tell you when something comes up.</p></section>`;
+    return `<div class="home">
+      <div class="hello"><span class="date">${date}</span><h1>Good ${part}, Andi.</h1><p>${left?`${left} ${left===1?'thing needs':'things need'} you today. I’ve prepared ${left===1?'it':'each one'}.`:'All clear for today.'}</p></div>
+      <div class="fwrap"><div class="orbs" aria-hidden="true"><span class="ob o1"></span><span class="ob o2"></span><span class="ob o3"></span></div>${primary}</div>
+      <div class="secs">
+        <div class="mini"><span class="mi-i">${ic('chat',16)}</span><span><b>1,284 chats this week</b><small>86% solved by the chatbot · ${ic('up',11,2)} 12%</small></span></div>
+        <div class="mini"><span class="mi-i">${ic('spark',16)}</span><span><b>9 unanswered questions</b><small><button class="lnk" data-a="assist" type="button">Draft answers with ax_ganes</button></small></span></div>
+      </div>
+      ${S.panel?'':`<div class="askw"><div class="ask"><span style="color:#5D6676;display:flex">${ic('search',20)}</span><input id="askIn" type="text" autocomplete="off" placeholder="Ask Ganes or search…" aria-label="Ask Ganes or search"><button class="speak" data-a="askspeak" type="button">${ic('mic',18)}Speak</button></div></div>`}
+      <nav class="sem" aria-label="More">
+        <button class="lnk" data-a="full" type="button">Full overview</button><span>·</span>
+        <a class="lnk" href="conversations.html">Needs Attention <em>1</em></a><span>·</span>
+        <a class="lnk" href="product-edit.html">Edit product ✨</a><span>·</span>
+        <a class="lnk" href="capabilities.html">What ax_ganes can do</a><span>·</span>
+        <span class="st"><i></i>Chatbot online</span>
+      </nav>
+    </div>`;
+  }
+  return `<div class="grid"><div class="seg" role="group" aria-label="Time period" style="justify-self:end">${[['today','Today'],['7d','7 days'],['30d','30 days'],['all','All time']].map(([k,l])=>`<button data-period="${k}" aria-pressed="${S.period===k}" type="button">${l}</button>`).join('')}</div>${health}
+    <div class="grid stats">${STATS.map(stat).join('')}</div>
+    <div class="grid r2">${C.chart}${C.feedback}</div>
+    <div class="grid r11">${C.topics}${C.recent}</div>
+    <div class="grid r3">${C.status}${C.addons}${C.gaps}</div>
+    <div class="grid r2">${C.questions}${C.geo}</div>
+    </div>`;
+}
+
+/* ---------- ax_ganes panel ---------- */
+function axPanel(){
+  if(!S.panel){AN.open=false;return `<aside class="ax" aria-label="ax_ganes"></aside>`}
+  const hour=new Date().getHours(), part=hour<11?'morning':hour<15?'afternoon':'evening';
+  const open=TASKS.filter(t=>!S.done[t.id]);
+  const enter=!AN.open;AN.open=true;
+  return `<aside class="ax" aria-label="ax_ganes"><div class="axin${enter?' enter':''}">
+   <div class="axh"><span class="axmark" aria-hidden="true"><svg viewBox="0 0 20 20" width="13" height="13"><path d="M10 2.5l1.9 5.6 5.6 1.9-5.6 1.9L10 17.5l-1.9-5.6L2.5 10l5.6-1.9z" fill="#fff"/></svg></span><span><b>ax_ganes</b><small>Owner rights · business data</small></span><span class="sp"></span>
+    <button class="ib${S.fp?' on':''}" data-a="fptoggle" type="button" title="${S.fp?'Hide Focus':'Show Focus'}" aria-label="${S.fp?'Hide Focus':'Show Focus'}" aria-pressed="${!!S.fp}">${ic(S.fp?'fpclose':'fpopen',17)}</button>
+    <button class="ib" data-a="close" type="button" title="Close" aria-label="Close ax_ganes">${ic('x',17)}</button></div>
+   <div class="axb" id="axb">
+    ${S.fp?'':`<div class="hi"><h2>Good ${part}, Andi.</h2><p>Since yesterday: 186 chats, 2 need you. <span class="src">Conversations</span><span class="src">Knowledge Base</span> I prepared each one, so you only confirm.</p></div>`}
+    ${S.fp&&!S.chat.length&&S.step==='card'?`<div class="hi0">Pick up the task on the left, or ask me anything.</div>`:''}
+    ${S.fp&&S.step==='card'?'':focusCard(open)}
+    ${S.chat.map(chatMsg).join('')}${(AN.n=S.chat.length,'')}
+   </div>
+   <div class="axf">${gestureStrip()}
+    ${S.plus?`<div class="plusm" role="menu"><button role="menuitem" data-a="attach" type="button">${ic('plus',15)}Add a file</button><button role="menuitem" data-a="newchat" type="button">${ic('edit',15)}New chat</button><button role="menuitem" data-a="settings" type="button">${ic('cog',15)}Settings</button></div>`:''}
+    <div class="comp"><button class="ib${S.plus?' on':''}" data-a="plus" type="button" aria-label="More" aria-expanded="${!!S.plus}">${ic('plus',17)}</button>
+     <input id="axIn" placeholder="${S.listen?'Listening…':'Work with ax_ganes'}" autocomplete="off" aria-label="Message ax_ganes">
+     <button class="ib${S.listen?' on':''}" data-a="mic" type="button" aria-label="Speak" aria-pressed="${!!S.listen}">${ic('mic',17)}</button>
+     <button class="ib" data-a="send" type="button" aria-label="Send">${ic('send',17)}</button></div>
+    ${S.chat.length?'':`<div class="hint"><button data-say="${STOCKQ}" type="button">${STOCKQ}</button><button data-say="${PRICEQ}" type="button">${PRICEQ}</button></div>`}
+   </div></div></aside>`;
+}
+/* v3.4.1 Focus page (the v3.2 Home) — part of the ax_ganes room, not of the client dashboard.
+   It unfolds out of the room to the left over the client's content area; the client's own menu stays visible.
+   Every button continues in the room. */
+function focusPage(){
+  if(!S.panel||!S.fp){AN.fpOpen=false;return ''}
+  const enter=!AN.fpOpen;AN.fpOpen=true;
+  const hour=new Date().getHours(),part=hour<11?'morning':hour<15?'afternoon':'evening';
+  const t=curTask(),left=TASKS.filter(x=>!S.done[x.id]).length;
+  const date=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const card=t&&S.step!=='card'?`<section class="focus prog" aria-label="Focus"><div class="fh"><span><i></i>In progress</span><em>continues on the right →</em></div><h2>${t.title}</h2><p>Check the preview in the chat and approve it there. The next task appears here.</p></section>`
+    :t?`<section class="focus" aria-label="Focus">
+      <div class="fh"><span class="${t.urg?'urg':''}"><i></i>${t.tag}</span><em>${left>1?`1 of ${left}`:''}</em></div>
+      <h2>${t.title}</h2><p>${t.body}</p>
+      ${t.draft?`<div class="draft"><small>ax_ganes DRAFT</small>${t.draft}</div>`:''}
+      <div class="src2">${ic('eye',13)}Source: ${t.src}</div>
+      <div class="fa"><button class="btn pri big" data-a="fpgo" type="button">${t.cta}</button>${left>1?`<button class="btn ghost" data-a="fpother" type="button">Other task</button>`:''}</div></section>`
+    :`<section class="focus" aria-label="Focus"><div class="fh"><span class="okk"><i></i>All clear</span></div><h2>Nothing needs you right now</h2><p>Your chatbot is online. I’ll tell you when something comes up.</p></section>`;
+  return `<section class="fpage${enter?' enter':''}" aria-label="ax_ganes Focus">
+   <div class="fptop"><span class="fpk">Today’s priorities · by ax_ganes</span><span class="sp"></span>
+    <button class="btn ghost" data-a="fphide" type="button">Show my dashboard →</button></div>
+   <div class="home">
+    <div class="hello"><span class="date">${date}</span><h1>Good ${part}, Andi.</h1><p>${left?`${left} ${left===1?'thing needs':'things need'} you today. I’ve prepared ${left===1?'it':'each one'}.`:'All clear for today.'}</p></div>
+    <div class="fwrap"><div class="orbs" aria-hidden="true"><span class="ob o1"></span><span class="ob o2"></span><span class="ob o3"></span></div>${card}</div>
+    <div class="secs">
+     <div class="mini"><span class="mi-i">${ic('chat',16)}</span><span><b>1,284 chats this week</b><small>86% by chatbot · ${ic('up',11,2)}12%</small></span></div>
+     <div class="mini"><span class="mi-i">${ic('spark',16)}</span><span><b>9 unanswered questions</b><small><button class="lnk" data-a="fpask" data-q="Draft answers for the answer gaps" type="button">Draft answers</button></small></span></div>
+    </div>
+    <nav class="sem" aria-label="More">
+     <button class="lnk" data-a="fphide" type="button">Full overview</button><span>·</span>
+     <button class="lnk" data-a="fpask" data-q="What needs attention in Conversations?" type="button">Needs Attention <em>1</em></button><span>·</span>
+     <button class="lnk" data-a="fpask" data-q="Help me edit a product description" type="button">Edit product ✨</button><span>·</span>
+     <button class="lnk" data-a="fpask" data-q="What can you do?" type="button">What I can do</button>
+    </nav>
+   </div></section>`;
+}
+function focusCard(open){
+  if(!open.length)return `<div class="fc"><div class="done"><span class="ck">${ic('check',16,2.2)}</span><div><h4 style="margin:0">All clear for today</h4><p>I’ll tell you if anything comes up.</p></div></div></div>`;
+  const t=open[S.t%open.length];const key=t.id+S.step,sw=AN.fc!==key?' swap':'';AN.fc=key;
+  const head=`<div class="tg"><span class="${t.urg?'urg':''}"><i></i>${t.tag}</span><em>${t.risk==='R3'?'OK + impact':'Needs OK'}</em></div><h4>${t.title}</h4><p>${t.body}</p><div class="why">Source: ${t.src}</div>`;
+  if(S.step==='done'){const l=S.lastDone;return `<div class="fc"><div class="done"><span class="ck">${ic('check',16,2.2)}</span><div><h4 style="margin:0 0 2px">${l.done}</h4><div class="log">${l.log}</div></div></div><div class="acts"><button class="btn" data-a="undo" type="button">Undo</button><span class="sp"></span>${open.length?`<button class="btn pri" data-a="next" type="button">Next task</button>`:''}</div></div>`}
+  if(S.step==='preview'){
+    const body=t.draft?`<div class="draft"><small>REPLY TO RINA</small>${t.draft}</div>`:`<div class="prev">${t.rows.map(([k,v])=>`<div class="r"><span>${k}</span><b>${Array.isArray(v)?`<s>${v[0]}</s>→ ${v[1]}`:v}</b></div>`).join('')}</div>`;
+    return `<div class="fc${sw}">${head}${body}${t.impact?`<div class="impact">${t.impact}</div>`:''}<div class="acts"><button class="btn pri" data-a="approve" type="button">${t.approve}</button><button class="btn ghost" data-a="back" type="button">Not now</button></div></div>`;
+  }
+  return `<div class="fc${sw}">${head}${t.draft?`<div class="draft"><small>MY DRAFT</small>${t.draft}</div>`:''}<div class="acts"><button class="btn pri" data-a="review" type="button">${t.cta}</button><span class="sp"></span>${open.length>1?`<button class="btn ghost" data-a="other" type="button">Other task</button>`:''}</div></div>`;
+}
+const AN={open:false,fc:'',n:0};
+function chatMsg(m,i){const nw=i>=AN.n?' new':'';
+  if(m.typing)return `<div class="msg a${nw}"><span class="typing"><i></i><i></i><i></i></span></div>`;
+  if(m.who==='u')return `<div class="msg u${nw}">${esc(m.text)}</div>`;
+  let x=`<div class="msg a${nw}">${m.text}`;
+  if(m.rows)x+=`<div class="prev">${m.rows.map(([k,v])=>`<div class="r"><span>${k}</span><b>${Array.isArray(v)?`<s>${v[0]}</s>→ ${v[1]}`:v}</b></div>`).join('')}</div>`;
+  if(m.ok&&!m.applied)x+=`<div class="acts" style="display:flex;gap:8px;margin-top:10px"><button class="btn pri" data-a="apply" data-i="${m.i}" type="button">${m.ok}</button><button class="btn ghost" data-a="redo" data-i="${m.i}" type="button">Another version</button></div>`;
+  if(m.applied)x+=`<div class="log" style="margin-top:8px">${ic('check',12,2.2)} ${m.applied}</div>`;
+  return x+`<div class="fbk"><button type="button" aria-label="Copy">${ic('copy',14)}</button><button type="button" aria-label="Helpful">${ic('thumbu',14)}</button><button type="button" aria-label="Not helpful">${ic('thumbd',14)}</button></div></div>`;
+}
+function gestureStrip(){
+  if(!S.g||!S.g.pose)return '';
+  const P=GEST[S.g.pose];
+  return `<div class="gst">${ic('hand',15)}<span><b>${P.icon} ${P.name}</b> · ${P.label}</span><span class="bar"><i style="width:${Math.round(S.g.p*100)}%"></i></span></div>`;
+}
+function userMenu(){
+  const it=(a,i,l,x='')=>`<button class="di" role="menuitem" ${a.startsWith('http')||a.endsWith('.html')?`data-link="${a}"`:`data-a="${a}"`} type="button">${ic(i,18)}${l}${x?`<small>${x}</small>`:''}</button>`;
+  return `<div class="dd" role="menu" aria-label="Profile">
+   <div class="who"><span class="av" aria-hidden="true">A</span><span><b>Andi</b><small>Owner · ${CO}</small></span></div>
+   ${it('profile.html','user','Profile & security')}
+   <div class="dh">APP SETTINGS</div>
+   ${it('settings','hand','Home, gestures & ax_ganes')}
+   ${it('billing.html','coin','Billing & subscription')}
+   ${it('members.html','team','Manage members')}
+   <div class="dsep"></div>
+   ${it('login.html','out','Sign out')}
+  </div>`;
+}
+/* All menus, opened only when needed (tablet style): same 3 sections as v3.1, links to the same pages */
+const MENUS=[
+ {sec:'Daily work',items:[['Overview (full)','overview','All Ganes Overview sections','@full'],['Conversations','chat','Reply to shoppers, take over, mark resolved','conversations.html'],['Products','box','Catalogue, file upload, stock alerts','products.html'],['Edit product ✨','edit','Example: ax_ganes helps inside the form','product-edit.html'],['Knowledge Base','book','Files and web pages Ganes answers from','knowledge-base.html'],['What ax_ganes can do','spark','All features, incl. the easy-to-miss ones','capabilities.html']]},
+ {sec:'Test & improve',items:[['Chat Simulator','sim','Try questions before shoppers do','chat-simulator.html'],['Answer Gaps','spark','Questions Ganes couldn’t answer','ai-service.html'],['Discovery Readiness','search','Products Ganes suggests and promotes','discovery-readiness.html']]},
+ {sec:'Chatbot setup',items:[['Chatbot Settings','cog','Store info, persona & appearance, embed code','settings.html'],['Chatbot Flow','flow','How the chatbot answers','chatbot-flow.html'],['Add-ons','plug','Order tracking, promos, tickets, live agent','add-ons.html'],['AI Services','spark','API keys and usage for developers','ai-service.html']]}
+];
+function menusSheet(){
+  const q=(S.mq||'').trim().toLowerCase();let n=0;
+  const secs=MENUS.map(sc=>{const items=sc.items.filter(([l,,d])=>!q||(l+' '+d).toLowerCase().includes(q));if(!items.length)return'';
+    return `<section class="ms"><h4>${sc.sec}</h4><div class="mg">${items.map(([l,i,d,h])=>`<button class="mi" style="--i:${n++}" ${h==='@full'?'data-a="menufull"':`onclick="location.href='${h}'"`} type="button"><span class="ti">${ic(i,20)}</span><span class="x"><b>${l}</b><small>${d}</small></span></button>`).join('')}</div></section>`}).join('');
+  return `<div class="scrim" data-a="menusx"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mh">
+   <div class="sh"><div><h3 id="mh">Ganes menus</h3><p>Pages of your Ganes dashboard. ax_ganes only opens them for you; it never changes them.</p></div><span class="sp"></span><button class="close" data-a="menusx" type="button">Close</button></div>
+   <label class="msrch">${ic('search',18)}<input id="mq" placeholder="Find a menu…" value="${esc(S.mq||'')}" autocomplete="off" aria-label="Find a menu"></label>
+   <div class="msb">${secs||`<div class="empty">No menu matches “${esc(S.mq||'')}”. Try Ask Ganes instead.</div>`}</div>
+   <div class="sf">${ic('cog',20)}<span><b>Looking for account, billing, team or gestures?</b><br>They’re in App Settings, opened from your profile (Andi).</span><span class="sp"></span><button class="ghost2" data-a="settings" type="button">Open App Settings</button></div>
+  </div>`;
+}
+function settingsModal(){
+  const row=(k,t,d)=>`<div class="tgl"><span class="x"><b>${t}</b><small>${d}</small></span><button class="sw" role="switch" aria-checked="${S.set[k]}" data-sw="${k}" type="button" aria-label="${t}"></button></div>`;
+  return `<div class="mscrim" data-a="setx"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sth" onclick="event.stopPropagation()">
+   <header><h3 id="sth">App settings · ax_ganes</h3><button class="ib" data-a="setx" type="button" aria-label="Close" style="color:var(--text2)">${ic('x',18)}</button></header>
+   <div class="mb">
+    ${row('privacy','Privacy guard','With the camera on, the whole screen blurs when more than one person is in front of it. Orka tells you why.')}
+    ${row('gestures','Gesture shortcuts','Set by the team: ✌️ talk to ax_ganes · 👍 Needs Attention · ☝️ stock alerts · 🖐 open ax_ganes · ✊ cancel.')}
+    ${row('nudges','Orka nudges','Orka offers help in a speech bubble when something needs you.')}
+    ${row('follow','Orka looks at the cursor','Orka’s eyes and face follow your pointer. Shake the pointer and Orka gets dizzy.')}
+    ${row('voice','Spoken replies','ax_ganes reads short answers out loud.')}
+    <div class="tgl"><span class="x"><b>Camera</b><small>${S.cam.on?(S.cam.mode==='real'?'On · processed on this device, nothing is recorded.':'On · simulated for this prototype.'):'Off. Needed for privacy guard and gestures.'}</small></span><button class="btn${S.cam.on?'':' pri'}" data-a="${S.cam.on?'camoff':'camon'}" type="button">${S.cam.on?'Turn off':'Turn on'}</button></div>
+   </div></div></div>`;
+}
+
+/* ===================== Orka ===================== */
+let faceT=0;
+function setOrkaImg(src){const a=$('#orkaImg'),b=$('#orkaFace');if(a)a.src=src;if(b)b.src=src}
+function face(e,ms){S.face=e;setOrkaImg(ORKA(EXPR[e]));const f=$('#axFace');if(f)f.src=ORKA(EXPR[e]);clearTimeout(faceT);if(ms)faceT=setTimeout(()=>face('idle'),ms)}
+/* idle blink */
+setInterval(()=>{if(S.face&&S.face!=='idle')return;setOrkaImg(ORKA(EXPR.blink));setTimeout(()=>{if(!S.face||S.face==='idle')setOrkaImg(ORKA(EXPR.idle))},140)},4200);
+/* Orka stays in place. Only the face reacts: eyes/visor look toward the cursor, the head turns a little (2D),
+   cursor shaking makes Orka dizzy, then pouting. */
+const O={sl:0,x:0,y:0,mx:innerWidth/2,my:innerHeight/2,lx:0,ly:0,dirs:[],lastDx:0,mood:0};
+document.addEventListener('mousemove',e=>{
+  const dx=e.clientX-O.mx;O.mx=e.clientX;O.my=e.clientY;
+  /* shake = 5+ quick direction changes within 700 ms */
+  if(Math.abs(dx)>6){const d=Math.sign(dx);if(d!==O.lastDx){O.dirs.push(Date.now());O.lastDx=d}}
+  O.dirs=O.dirs.filter(t=>Date.now()-t<700);
+  if(O.dirs.length>=5&&Date.now()-O.mood>2600&&S.set.follow){O.mood=Date.now();O.dirs=[];dizzy()}
+});
+
+/* v3.3 — sleepy Orka: after 5 s with no pointer, key, touch or scroll, Orka gets sleepy (eyes closed, Zzz),
+   the head slowly drops, then nods down hard and wakes up startled. Back awake it carries on as before:
+   if something needs you, it nudges. Any input while sleepy wakes it too. */
+const SL={on:false,nod:false,drop:0,last:Date.now(),t:[],off:false,IDLE:5000};
+function slClear(){SL.t.forEach(clearTimeout);SL.t=[]}
+function sleepOrka(){SL.on=true;SL.drop=.55;SL.nod=false;document.body.classList.add('orka-sleepy');face('sleepy');
+  SL.t.push(setTimeout(()=>{SL.drop=1},1600));                       /* head keeps sinking */
+  SL.t.push(setTimeout(()=>{SL.nod=true;SL.drop=1.7},3000));         /* head falls */
+  SL.t.push(setTimeout(()=>wakeOrka(true),3450))}                    /* …and Orka startles awake */
+function wakeOrka(self){if(!SL.on)return;slClear();SL.on=false;SL.nod=false;SL.drop=0;SL.last=Date.now();document.body.classList.remove('orka-sleepy');
+  const o=$('#orka');if(o){o.classList.remove('jolt');void o.offsetWidth;o.classList.add('jolt');setTimeout(()=>o.classList.remove('jolt'),600)}
+  face('surprised',1300);bubbleSmall(self?'Huh! I’m awake 👀':'Oh! You’re back 👋');
+  SL.t.push(setTimeout(()=>{bubbleClearSmall();if(curTask())nudge()},1500))}
+function slActive(){SL.last=Date.now();if(SL.on)wakeOrka(false)}
+['mousemove','mousedown','keydown','touchstart','wheel','scroll'].forEach(ev=>addEventListener(ev,e=>{if(e.isTrusted)slActive()},{passive:true,capture:true}));
+setInterval(()=>{if(SL.off||SL.on||selfTesting)return;const busy=S.panel||S.menus||S.settings||$('.bub:not(.sm)')||document.body.classList.contains('priv')||(S.face&&S.face!=='idle');
+  if(busy){SL.last=Math.max(SL.last,Date.now()-SL.IDLE+1500);return}
+  if(Date.now()-SL.last>SL.IDLE)sleepOrka()},250);
+function dizzy(){face('thinking');bubbleSmall('Whoa… dizzy! 😵‍💫');setTimeout(()=>{face('talk2');bubbleSmall('Hmph. Please slow down.')},1500);setTimeout(()=>{face('idle');bubbleClearSmall()},2900)}
+let smallT=0;function bubbleSmall(t){if($('.bub:not(.sm)'))return;$('#bubble').innerHTML=`<div class="bub sm" role="status">${t}</div>`;clearTimeout(smallT);smallT=setTimeout(bubbleClearSmall,3200)}
+function bubbleClearSmall(){const b=$('.bub.sm');if(b)b.remove()}
+let TW=1180,TH=820;
+/* v3.4.1: Orka keeps its corner while it melts into the room, so it never jumps sideways */
+function orkaBounds(){const w=$('#orka').offsetWidth||72;return {w,x:TW-w-28}}
+let lastFrame=0;
+function orkaStep(){lastFrame=Date.now();
+  const el=$('#orka'),hd=$('#orkaHd'),fc=$('#orkaFace');
+  if(el&&hd){
+    const pv=document.body.classList.contains('priv'),{w,x}=orkaBounds();
+    O.x=x;
+    el.style.transform=`translate(${O.x}px,0)`;
+    const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;   /* screen coords, works with the tablet scale */
+    let tx=0,ty=0;
+    if(S.set.follow&&!SL.on){const dx=O.mx-cx,dy=O.my-cy,d=Math.hypot(dx,dy)||1,k=Math.min(1,d/260);tx=dx/d*k;ty=dy/d*k}
+    O.lx+=(tx-O.lx)*.18;O.ly+=(ty-O.ly)*.18;
+    const t=Date.now(),breathe=Math.sin(t/900)*1.2;
+    /* head turns a little toward the cursor, no 3D, so the shape never warps */
+    /* time-based easing so the droop looks the same at any frame rate */
+    const now=performance.now(),dt=Math.min(100,now-(O.lt||now));O.lt=now;
+    O.sl+=((SL.on?SL.drop:0)-O.sl)*(1-Math.pow(1-(SL.nod?.35:.04),dt/16.7));
+    hd.style.transform=`translate(${O.lx*2.5+O.sl*3}px,${O.ly*2+breathe*(1-O.sl*.6)+O.sl*9}px) rotate(${O.lx*6+O.sl*16}deg)`;
+    if(fc)fc.style.transform=`translate(${O.lx*w*.07}px,${O.ly*w*.05}px)`;
+    placeBubble(O.x,w,pv);
+  }
+}
+(function loop(){orkaStep();requestAnimationFrame(loop)})();
+/* some embedded previews pause animation frames; keep Orka alive anyway */
+setInterval(()=>{if(Date.now()-lastFrame>120)orkaStep()},33);
+function placeBubble(x,w,pv){const b=$('.bub');if(!b)return;const bw=b.offsetWidth,cx=x+w/2;
+  const left=Math.max(12,Math.min(TW-bw-12,cx-bw/2));b.style.left=left+'px';b.style.setProperty('--tail',(cx-left)+'px');
+  b.style.bottom=(56+w+12)+'px'}
+function orkaTransform(){return $('#orka').style.transform}
+function faceTransform(){return $('#orkaFace').style.transform}
+
+/* speech bubble */
+let bubT=0;
+function bubble(html,acts,ms){
+  clearTimeout(bubT);
+  $('#bubble').innerHTML=`<div class="bub" role="status">${html}${acts?`<div class="ba">${acts}</div>`:''}<button class="x" data-a="bubx" type="button" aria-label="Dismiss">×</button></div>`;
+  if(ms)bubT=setTimeout(()=>{if(!document.body.classList.contains('priv'))$('#bubble').innerHTML=''},ms);
+  requestAnimationFrame(()=>orkaStep());setTimeout(orkaStep,450);
+}
+function bubbleClear(){clearTimeout(bubT);$('#bubble').innerHTML=''}
+let nudgeI=0,nudgeT=0;
+function nudge(){
+  if(!S.set.nudges||S.panel||S.menus||S.settings||document.body.classList.contains('priv'))return;
+  const n=NUDGES[nudgeI%NUDGES.length];nudgeI++;
+  if(n.t&&S.done[n.t]){return nudge()}
+  face(n.expr,2600);
+  bubble(n.txt,`<button class="btn pri" data-a="open" ${n.t?`data-task="${n.t}"`:''} type="button">${n.cta}</button><button class="btn ghost" data-a="bubx" type="button">Later</button>`,11000);
+}
+function scheduleNudges(first=2200){clearTimeout(nudgeT);nudgeT=setTimeout(function tick(){nudge();nudgeT=setTimeout(tick,24000)},first)}
+
+/* ===================== panel actions ===================== */
+/* v3.4.1: opening from Orka (no task) also unfolds the Focus page out of the room; a direct task goes straight to the room */
+const FPK='ax34-focus-seen';
+function dayPart(){const h=new Date().getHours();return h<11?'morning':h<15?'afternoon':'evening'}
+function fpDue(){try{return sessionStorage.getItem(FPK)!==dayPart()}catch(e){return !AN.fpSeen}}
+function fpSeen(){AN.fpSeen=true;try{sessionStorage.setItem(FPK,dayPart())}catch(e){}}
+/* device back from sleep (tab hidden ≥ 30 min) with a new recommendation → Focus is due again */
+let hiddenAt=0;document.addEventListener('visibilitychange',()=>{if(document.hidden){hiddenAt=Date.now();return}
+  if(hiddenAt&&Date.now()-hiddenAt>=30*60e3&&curTask()){try{sessionStorage.removeItem(FPK)}catch(e){}AN.fpSeen=false}});
+function openPanel(task){const was=S.panel;S.panel=true;S.menu=false;bubbleClear();
+  if(!was){S.fp=!task&&fpDue();if(S.fp)fpSeen()}
+  if(task){const open=TASKS.filter(t=>!S.done[t.id]);const k=open.findIndex(t=>t.id===task);if(k>=0){S.t=k;S.step='card'}}
+  face('happy',1600);render();later(700,()=>{const i=$('#axIn');if(i&&S.panel)i.focus()})}
+/* closing plays the bubble shrink (room) and the slide back to the right (Focus page) before the DOM goes */
+function closePanel(){S.panel=false;S.listen=false;S.fp=false;S.plus=false;document.body.classList.remove('fp-on');
+  const r=$('.axin'),f=$('.fpage');
+  if(selfTesting||(!r&&!f)){render();return}
+  if(r)r.classList.add('leaving');if(f)f.classList.add('leaving');
+  document.body.classList.remove('orka-dock','ax-open');   /* width goes back → the client page slides back to the right */
+  later(320,()=>{if(!S.panel)render()})}
+function hideFocus(){const f=$('.fpage');S.fp=false;document.body.classList.remove('fp-on');if(!f||selfTesting){render();return}f.classList.add('leaving');later(440,()=>{if(!S.fp)render()})}
+/* every action on the Focus page continues inside the room, never on a new page */
+function toRoom(fn){fn();render();later(60,()=>{const c=$('.axb .fc');if(c){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');c.scrollIntoView({block:'nearest',behavior:'smooth'})}})}
+function curTask(){const open=TASKS.filter(t=>!S.done[t.id]);return open.length?open[S.t%open.length]:null}
+function approve(){const t=curTask();if(!t)return;S.step='working';face('thinking');
+  /* rules: permission checked again before acting (G1), risk class from the inventory (G2) */
+  render();$('.fc .acts')&&($('.fc .acts').innerHTML=`<span class="typing"><i></i><i></i><i></i></span><span class="muted" style="font-size:12px">Checking your rights, then running…</span>`);
+  later(900,()=>{S.done[t.id]=1;S.lastDone=t;S.lastId=t.id;S.step='done';S.t=0;face('delighted',2200);render();toast(`${t.done}`)})}
+function undo(){if(!S.lastId)return;delete S.done[S.lastId];S.step='card';S.t=0;face('content',1200);render();toast('Undone. Nothing changed.')}
+let toastT=0;function toast(m,ms=2600){S.toast=esc(m);render();clearTimeout(toastT);toastT=setTimeout(()=>{S.toast='';render()},ms)}
+
+/* chat: ax_ganes reads the store and prepares the change; the person confirms */
+function ask(q){
+  q=(q||'').trim();if(!q)return;
+  S.chat.push({who:'u',text:q});S.chat.push({typing:1});S.scroll=true;face('thinking');render();
+  later(800,()=>{S.chat.pop();S.chat.push(answer(q));S.scroll=true;face('content',1600);render()});
+}
+function answer(q){
+  const i=S.chat.length,l=q.toLowerCase();
+  if(P.stockRe.test(l)&&/(left|stock|sisa|how many)/.test(l))return {who:'a',i,text:P.stockA,rows:[[P.stockU===''?'Status':'Stock',P.stockU===''?['Stuck','Waiting for document']:['0',P.stockA.match(/<b>(\d+)<\/b> units/)[1]]],['Source',P.src]],ok:P.stockU===''?'Prepare requests':'Update stock'};
+  if(/price|harga/.test(l)&&/\d+\s*%/.test(l)){const p=+l.match(/(\d+)\s*%/)[1];const old=P.priceOld,n=Math.round(old*(1+p/100)/1000)*1000;
+    return {who:'a',i,text:`Here is the change for <b>${P.priceN}</b>. I checked your rights: Owner can edit prices.`,rows:[['Price',[idr(old),idr(n)]],['Source','Products · current price']],ok:'Approve price'}}
+  if(/answer gaps|draft answer/.test(l))return {who:'a',i,text:`I grouped 9 unanswered questions and drafted 3 answers from your documents:<br>${P.gapsA}`,ok:'Add to knowledge'};
+  if(/edit a product|product description/.test(l))return {who:'a',i,text:`Which product? I can write the description, title and tags with ✨, and you pick the tone. Try <b>“${P.stockN}, friendly tone”</b>.`};
+  if(/what can you do/.test(l))return {who:'a',i,text:`I read your store and do the work for you, one task at a time: reply to customers, fix stock, read documents again, write product texts, and change prices with a preview. Nothing changes until you approve.`};
+  if(/needs attention/.test(l))return {who:'a',i,text:P.needA};
+  if(/return|retur/.test(l))return {who:'a',i,text:P.retA};
+  return {who:'a',i,text:`I looked at Overview for the last 7 days: 1,284 chats, 86% solved by the chatbot, 37 handed to a person. The busiest day was Friday. Want me to open the busiest hours?`};
+}
+const idr=n=>'Rp '+n.toLocaleString('id-ID');
+
+/* ===================== camera: privacy guard + gestures ===================== */
+let vision=null,faceDet=null,gestRec=null,camStream=null,camLoopOn=false;
+async function camOn(mode){
+  S.cam.on=true;S.cam.mode=mode||S.cam.mode;S.cam.faces=1;render();
+  if(S.cam.mode!=='real')return;
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,facingMode:'user'}});
+    const v=$('#camv');v.srcObject=camStream;await v.play();
+    vision=vision||await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs');
+    const fs=await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    faceDet=faceDet||await vision.FaceDetector.createFromOptions(fs,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',delegate:'GPU'},runningMode:'VIDEO',minDetectionConfidence:.55});
+    gestRec=gestRec||await vision.GestureRecognizer.createFromOptions(fs,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task',delegate:'GPU'},runningMode:'VIDEO',numHands:1});
+    camLoopOn=true;let last=-1,lastF=0;
+    (function step(){if(!camLoopOn)return;const v=$('#camv');const now=performance.now();
+      if(v.readyState>=2&&v.currentTime!==last&&now-lastF>90){last=v.currentTime;lastF=now;const ts=Math.round(now);
+        try{const f=faceDet.detectForVideo(v,ts);peopleSeen(f.detections.length||0);const b0=f.detections[0]&&f.detections[0].boundingBox;window.orkaCam=b0?[Math.max(-1,Math.min(1,-((b0.originX+b0.width/2)/v.videoWidth*2-1)*1.7)),Math.max(-1,Math.min(1,((b0.originY+b0.height/2)/v.videoHeight*2-1)*1.7))]:null}catch(e){}
+        try{if(S.set.gestures){const g=gestRec.recognizeForVideo(v,ts+1);const c=g.gestures[0]&&g.gestures[0][0];poseSeen(c&&c.score>.6?MP[c.categoryName]:null)}}catch(e){}}
+      requestAnimationFrame(step)})();
+  }catch(e){S.cam.mode='sim';toast('Camera not available here. Using simulated camera (keys P, V, U, O, M, F).',4200);render()}
+}
+function camOff(){camLoopOn=false;if(camStream)camStream.getTracks().forEach(t=>t.stop());camStream=null;S.cam.on=false;S.cam.faces=1;privacy(false);render()}
+
+/* privacy guard: >1 person for 0.6 s → blur; 1 person for 1.2 s → clear */
+let manyT=0,fewT=0;
+function peopleSeen(n){
+  if(n===S.cam.faces)return;S.cam.faces=n;
+  clearTimeout(manyT);clearTimeout(fewT);
+  if(n>1){if(!S.alone)manyT=setTimeout(()=>privacy(true),600)}
+  else{S.alone=false;fewT=setTimeout(()=>privacy(false),1200)}
+  const chip=$('.camchip');if(chip){chip.className='camchip'+(S.cam.on?(n>1?' alert':' on'):'');chip.lastChild.textContent=n>1?`${n} people seen`:'1 person · private'}
+}
+function privacy(on){
+  if(on&&(!S.set.privacy||!S.cam.on))return;
+  const was=document.body.classList.contains('priv');
+  document.body.classList.toggle('priv',on);
+  if(on&&!was){face('surprised');setTimeout(()=>{if(document.body.classList.contains('priv'))face('focus')},1400);
+    bubble(`<b>Someone is behind you.</b><br>I softened the screen to keep customer data private. It clears by itself when you’re alone.`,`<button class="lnk" data-a="alone" type="button">Show anyway</button>`)}
+  if(!on&&was){bubbleClear();face('happy',1500);setTimeout(()=>bubbleSmall('All clear, welcome back 👋'),60)}
+}
+
+/* gestures: team default map, hold 0.8 s → run; fist cancels */
+const GEST={palm:{icon:'🖐',name:'Open palm',label:'open ax_ganes'},peace:{icon:'✌️',name:'V sign',label:'talk to ax_ganes'},thumb:{icon:'👍',name:'Thumb up',label:'Needs Attention'},point:{icon:'☝️',name:'Point up',label:'stock alert'},fist:{icon:'✊',name:'Fist',label:'cancel'}};
+const MP={Open_Palm:'palm',Victory:'peace',Thumb_Up:'thumb',Pointing_Up:'point',Closed_Fist:'fist'};
+S.g={pose:null,p:0};let holdT=0,holdStart=0;
+function poseSeen(p){
+  if(!S.set.gestures)return;
+  if(p===S.g.pose)return;
+  S.g.pose=p;S.g.p=0;clearInterval(holdT);
+  if(!p){render();return}
+  if(p==='fist'){S.g.pose=null;runGesture('fist');return}
+  holdStart=Date.now();render();
+  holdT=setInterval(()=>{S.g.p=Math.min(1,(Date.now()-holdStart)/800);const b=$('.gst .bar i');if(b)b.style.width=Math.round(S.g.p*100)+'%';
+    if(S.g.p>=1){clearInterval(holdT);const q=S.g.pose;S.g.pose=null;runGesture(q)}},50);
+  if(!S.panel){bubble(`${GEST[p].icon} <b>${GEST[p].name}</b>: hold to ${GEST[p].label}`,null,1200)}
+}
+function runGesture(p){
+  if(p==='palm'){S.panel?closePanel():openPanel()}
+  else if(p==='peace'){if(!S.panel)openPanel();startListen()}
+  else if(p==='thumb')openPanel('reply');
+  else if(p==='point')openPanel('stock');
+  else if(p==='fist'){if(S.menus){S.menus=false;render()}else if(S.listen){S.listen=false;render()}else if(S.panel)closePanel();bubbleClear()}
+}
+
+/* voice: Web Speech API when available, otherwise a simulated phrase */
+let rec=null;
+function startListen(){
+  S.listen=true;face('listening');render();
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR&&!new URLSearchParams(location.search).has('selftest')){try{rec=new SR();rec.lang='en-US';rec.onresult=e=>{S.listen=false;ask(e.results[0][0].transcript)};rec.onend=()=>{if(S.listen){S.listen=false;render()}};rec.start();return}catch(e){}}
+  later(1400,()=>{if(S.listen){S.listen=false;ask(STOCKQ)}});
+}
+
+/* ===================== events ===================== */
+/* pages outside this prototype open as a stub inside the app; sign-out returns to the intro */
+document.addEventListener('click',e=>{const st=e.target.closest('[data-stub]');if(st){S.page=null;render();return}
+  const l=e.target.closest('a[href$=".html"],[data-link]');if(!l)return;const h=l.getAttribute('href')||l.dataset.link;e.preventDefault();e.stopPropagation();
+  if(h==='login.html'){if(parent!==window)parent.location.href=parent.location.pathname;return}
+  if(h==='index.html'){S.page=null;S.menu=false;render();return}
+  const nav=JSON.stringify(NAV).includes(h)&&[].concat(...NAV.map(x=>x.items||[x])).find(n=>n.href===h);S.page={id:nav?nav.id:h,l:(l.textContent||'').replace(/[0-9✨]+/g,'').trim().split('  ')[0]||'This'};S.menu=false;S.menus=false;render()},true);
+document.addEventListener('click',e=>{
+  const p=e.target.closest('[data-period]');if(p){S.period=p.dataset.period;render();return}
+  const sw=e.target.closest('[data-sw]');if(sw){const k=sw.dataset.sw;S.set[k]=!S.set[k];if(k==='privacy'&&!S.set[k])privacy(false);if(k==='nudges'&&!S.set[k])bubbleClear();render();return}
+  const sy=e.target.closest('[data-say]');if(sy){ask(sy.dataset.say);return}
+  if(e.target.closest('#orka')){S.panel?closePanel():openPanel();return}
+  const b=e.target.closest('[data-a]');
+  if(!b){if(S.menu&&!e.target.closest('.dd')){S.menu=false;render()}return}
+  const a=b.dataset.a;
+  ({open:()=>{openPanel(b.dataset.task);if(b.dataset.step){S.step=b.dataset.step;render()}},close:closePanel,menu:()=>{S.menu=!S.menu;render()},settings:()=>{S.menu=false;S.menus=false;S.plus=false;S.settings=true;render()},setx:()=>{S.settings=false;render()},
+    review:()=>{S.step='preview';face('focus');render()},back:()=>{S.step='card';render()},approve,undo,
+    fpgo:()=>toRoom(()=>{S.step='preview';face('focus')}),fpother:()=>{S.t++;S.step='card';render()},
+    fphide:hideFocus,fptoggle:()=>S.fp?hideFocus():(S.fp=true,render()),
+    fpask:()=>{ask(b.dataset.q)},
+    next:()=>{S.step='card';S.t=0;render()},other:()=>{S.t++;S.step='card';render()},
+    newchat:()=>{S.chat=[];S.plus=false;render()},askspeak:()=>{openPanel();startListen()},menus:()=>{S.menus=!S.menus;S.menu=false;render();later(60,()=>{const i=$('#mq');if(i)i.focus()})},menusx:()=>{S.menus=false;S.mq='';render()},menufull:()=>{S.menus=false;S.full=true;render()},skiphome:()=>{S.t++;render()},full:()=>{S.full=!S.full;render();$('.content').scrollTop=0},send:()=>{const i=$('#axIn');ask(i.value);i.value=''},mic:()=>S.listen?(S.listen=false,render()):startListen(),
+    plus:()=>{S.plus=!S.plus;render()},
+    attach:()=>toast('Drop any file: Excel, CSV, PDF or a photo. I read it and show a preview.'),
+    apply:()=>{const m=S.chat[+b.dataset.i];if(m){m.applied='Done. Logged as “by AX for Andi”. Undo is available in Activity.';face('delighted',1800);render()}},
+    redo:()=>{const m=S.chat[+b.dataset.i];if(m){m.text=m.text.replace('Here is the change','Here is another version');face('thinking',900);render()}},
+    assist:()=>{openPanel();ask('Draft answers for the answer gaps')},
+    bubx:bubbleClear,alone:()=>{S.alone=true;privacy(false)},camon:()=>camOn(),camoff:camOff
+  }[a]||(()=>{}))();
+});
+document.addEventListener('input',e=>{if(e.target.id==='mq'){S.mq=e.target.value;render()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='axIn'){ask(e.target.value);e.target.value='';return}
+  if(e.key==='Enter'&&e.target.id==='askIn'){const q=e.target.value;e.target.value='';openPanel();if(q.trim())ask(q);return}
+  if(e.key==='`'){S.poc=!S.poc;renderPoc();return}
+  if(e.key==='Escape'){if(S.settings){S.settings=false;render()}else if(S.menus){S.menus=false;render()}else if(S.menu){S.menu=false;render()}return}
+  if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  const k=e.key.toLowerCase();if(e.repeat)return;
+  if(k==='p'){if(!S.cam.on)camOn('sim');peopleSeen(S.cam.faces>1?1:2);return}
+  const map={v:'peace',u:'thumb',o:'point',m:'palm'};
+  if(k==='f'){runGesture('fist');return}
+  if(map[k]&&S.set.gestures){if(!S.cam.on)camOn('sim');poseSeen(map[k])}
+});
+document.addEventListener('keyup',e=>{const map={v:'peace',u:'thumb',o:'point',m:'palm'};if(map[e.key.toLowerCase()]&&S.g.pose===map[e.key.toLowerCase()]){clearInterval(holdT);S.g.pose=null;render()}});
+
+/* ===================== POC tools ===================== */
+function renderPoc(){
+  const el=$('#poc');el.classList.toggle('on',!!S.poc);if(!S.poc){el.innerHTML='';return}
+  const b=(a,l,pr)=>`<button class="pbn" data-poc="${a}" type="button"${pr!=null?` aria-pressed="${pr}"`:''}>${l}</button>`;
+  el.innerHTML=`<header><div><b>POC tools</b><i>v3.4 · Kit</i></div><button data-poc="x" aria-label="Close POC tools">×</button></header><div class="pb">
+   <section><h5>Scene</h5><div class="row">${b('reset','Reset')}${b('nudge','Orka nudge now')}${b('panel','Toggle ax_ganes',S.panel)}</div><p>ax_ganes starts closed. Orka invites the user in.</p></section>
+   <section><h5>Camera</h5><div class="row">${b('camsim','Simulated',S.cam.on&&S.cam.mode==='sim')}${b('camreal','Real webcam',S.cam.on&&S.cam.mode==='real')}${b('camoff','Off',!S.cam.on)}</div>
+    <div class="row" style="margin-top:6px">${b('p1','1 person',S.cam.on&&S.cam.faces<=1)}${b('p2','2 people',S.cam.on&&S.cam.faces>1)}</div><p>Key <kbd>P</kbd> toggles a second person. Real webcam needs http://localhost.</p></section>
+   <section><h5>Gestures (hold 0.8 s)</h5><p><kbd>V</kbd> ✌️ talk · <kbd>U</kbd> 👍 Needs Attention · <kbd>O</kbd> ☝️ stock · <kbd>M</kbd> 🖐 open ax_ganes · <kbd>F</kbd> ✊ cancel</p></section>
+   <section><h5>Check</h5><div class="row"><button class="pbn" type="button" onclick="location.search='?selftest=1'">Run self-test</button><button class="pbn" type="button" onclick="try{sessionStorage.removeItem('ax34-focus-seen')}catch(e){};location.search=''">New session (Focus again)</button></div></section></div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-poc]');if(!b)return;const a=b.dataset.poc;
+  if(a==='x')S.poc=false;if(a==='reset')location.href=location.pathname;if(a==='nudge'){S.panel=false;render();nudge()}if(a==='panel')S.panel?closePanel():openPanel();
+  if(a==='camsim'){camOff();camOn('sim')}if(a==='camreal'){camOff();camOn('real')}if(a==='camoff')camOff();
+  if(a==='p1'){if(!S.cam.on)camOn('sim');peopleSeen(1)}if(a==='p2'){if(!S.cam.on)camOn('sim');peopleSeen(2)}renderPoc()});
+$('#pocB').onclick=()=>{S.poc=!S.poc;renderPoc()};
+if(/[?&]poc=1/.test(location.search)||/localhost|127\.0\.0\.1|file:/.test(location.href))document.body.classList.add('poc-avail');
+
+/* ===================== self-test (?selftest=1) ===================== */
+let selfTesting=false;
+async function selfTest(){selfTesting=true;
+  const out=[],w=ms=>new Promise(r=>setTimeout(r,ms)),ok=(n,c,i='')=>out.push([!!c,n,i]);
+  const reset=()=>{S=JSON.parse(JSON.stringify(DEF));S.g={pose:null,p:0};document.body.classList.remove('priv');bubbleClear();render()};
+  reset();
+  /* v3.4: host app untouched + ax_ganes as a separate kit */
+  ok('Host = ganes_saas with its own sidebar menu',!!$('.host .sb')&&$$('.host .nv').length>=6);
+  ok('No ax_ganes Home page, header or Ganes menus',!$('.home')&&!$('.hd')&&!$('[data-a=menus]')&&!$('.sheet'));
+  ok('Host shows the full Ganes Overview',['Customer feedback','Top topics','Recent conversations','Store status','Active add-ons','Answer gaps','Visitor geographic distribution'].every(t=>$('.host .content').textContent.includes(t))&&$$('.stat').length===8);
+  ok('No ax_ganes buttons inside the host',!$('.host [data-a=open]')&&!$('.host .focus'));
+  ok('Ganes tokens: purple accent, Inter',getComputedStyle(document.documentElement).getPropertyValue('--a').trim()==='#3D1F87'&&/Inter/.test(getComputedStyle(document.body).fontFamily));
+  try{sessionStorage.removeItem(FPK)}catch(e){}AN.fpSeen=false;
+  openPanel();await w(1000);
+  const hr=$('.host').getBoundingClientRect(),kr=$('.axin').getBoundingClientRect();
+  ok('Room is a separate card next to the host (gap)',kr.left-hr.right>=6);
+  ok('Room header: max 2 controls, no mascot image',$$('.axh button').length<=2&&!$('.axh img')&&!!$('.axh .axmark'));
+  ok('Golden split: Focus ≈ 1.618 × room',(()=>{const b=$('.fpage').getBoundingClientRect().width,c=kr.width;return Math.abs(b/c-1.618)<.12})(),($('.fpage').getBoundingClientRect().width/kr.width).toFixed(2));
+  document.body.classList.add('st-still');await w(60);ok('Focus and room are flush (one surface)',Math.abs($('.fpage').getBoundingClientRect().right-$('.axin').getBoundingClientRect().left)<1.5&&document.body.classList.contains('fp-on'));document.body.classList.remove('st-still');
+  ok('Greeting shown once (in Focus, not repeated in the room)',!$('.axb .hi')&&!!$('.fpage .hello'));
+  ok('Room slides in from the right and pushes the page (Sidekick)',$('.axin').classList.contains('enter')&&/width/.test(getComputedStyle($('.ax')).transitionProperty)&&getComputedStyle($('.ax')).justifyContent==='flex-end'&&!/clip/.test(getComputedStyle($('.axin')).clipPath||''));
+  ok('Same timing as Sidekick (≈0.3 s), no blur',parseFloat(getComputedStyle($('.ax')).transitionDuration)<=.35&&/skInSlide/.test(getComputedStyle($('.axin')).animationName)&&!/blur/.test(getComputedStyle($('.axin')).filter));
+  ok('Orka hands over in place (quick fade, no jump)',document.body.classList.contains('orka-dock')&&Math.abs($('#orka').getBoundingClientRect().right-$('#tab').getBoundingClientRect().right)<160);
+  ok('Focus page (v3.2 Home) opens with the room',!!$('.fpage')&&/Rina asked/.test($('.fpage .focus').textContent)&&/Other task/.test($('.fpage').textContent));
+  ok('Focus page appears with the same Sidekick motion',/skIn/.test(getComputedStyle($('.fpage')).animationName));
+  const sbr=$('.host .sb').getBoundingClientRect(),fpr=$('.fpage').getBoundingClientRect();
+  ok('Client menu stays visible next to the Focus page',fpr.left>=sbr.right-1&&$('.host .sb').offsetWidth>200);
+  ok('Focus page is ax_ganes’, not the client’s',!$('.host .fpage')&&!!$('.fpage .fpk')&&!$('.fpage img'));
+  ok('No links that open new pages on the Focus page',!$('.fpage a[href]'));
+  ok('Primary button is Ganes ink',getComputedStyle($('.fpage .btn.pri')).backgroundColor==='rgb(26, 16, 66)');
+  $('[data-a=fpother]').click();ok('Other task swaps the Focus card',/Rice Cooker/.test($('.fpage .focus').textContent));
+  S.t=0;render();$('[data-a=fpgo]').click();await w(100);
+  ok('Focus shows “continues on the right”, no duplicate card',!!$('.fpage .focus.prog'));
+  ok('Focus button continues in the room (preview there)',S.step==='preview'&&!!$('.axb .fc')&&/can’t be unsent/.test($('.axb .fc').textContent)&&location.pathname.endsWith('index.html'));
+  $('.fpage [data-a=fpask]').click();await w(1100);ok('Focus links ask inside the room',S.chat.length>0&&!!$('.axb .msg.u'));
+  S.chat=[];S.step='card';selfTesting=false;$('[data-a=fphide]').click();ok('Hide Focus slides it back to the right',$('.fpage').classList.contains('leaving'));
+  await w(520);selfTesting=true;ok('…then the client dashboard is fully visible',!$('.fpage')&&S.panel);
+  ok('Without Focus, the card is in the room',$$('.axb .fc').length===1&&/Rina asked/.test($('.axb .fc').textContent));
+  $('.axh [data-a=fptoggle]').click();ok('Focus button in the room brings it back',!!$('.fpage'));
+  S.fp=false;render();
+  S.t=0;S.step='card';render();
+  ok('Composer has a living gradient border on focus',(()=>{$('#axIn').focus();return /ring/.test(getComputedStyle($('.comp')).animationName)})());
+  $('#axIn').blur();
+  /* nothing wraps or gets cut into two lines */
+  /* count the text lines inside an element: all text boxes must sit on one baseline band */
+  const one=el=>{const r=document.createRange();r.selectNodeContents(el);const rs=[...r.getClientRects()].filter(x=>x.width>1&&x.height>1);if(!rs.length)return true;const fs=parseFloat(getComputedStyle(el).fontSize);const mids=rs.map(x=>x.top+x.height/2);return Math.max(...mids)-Math.min(...mids)<fs*.9};
+  const chk=()=>['.fc .tg','.axh b','.axh small','.hint button','.focus .fh','.fpage .sem','.mini b','.mini small','.fptop .btn','.fc .acts .btn','.fpage .fa .btn'].flatMap(q=>$$(q)).filter(e=>!one(e)).map(e=>e.className+':'+e.textContent.trim().slice(0,30));
+  let bad=chk();S.fp=true;S.t=0;render();await w(50);bad=bad.concat(chk());S.t=1;render();bad=bad.concat(chk());S.t=2;render();bad=bad.concat(chk());S.fp=false;S.t=0;render();
+  ok('No label, link row or button wraps to a second line',!bad.length,bad.join(' | '));
+  S.fp=true;render();document.body.classList.add('st-still');await w(60);
+  const box=(c,q)=>{const R=$(c)&&$(c).getBoundingClientRect();return R?$$(c+' '+q).filter(e=>{const r=e.getBoundingClientRect();return r.width&&(r.right>R.right+1||r.left<R.left-1)}).map(e=>e.className||e.tagName):[]};
+  const sticks=box('.fpage','.focus,.mini,.sem,.secs,.hello,.fptop').concat(box('.axin','.fc,.comp,.hint,.axh,.msg'));
+  document.body.classList.remove('st-still');S.fp=false;render();
+  const cut=$$('.fpk,.mini b,.mini small,.axh b,.axh small,.fc .tg span,.focus .fh span').filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.textContent.trim());
+  S.fp=true;render();cut.push(...$$('.fpk').filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.textContent.trim()));S.fp=false;render();
+  ok('No label is cut off with “…”',!cut.length,cut.join(' | '));
+  ok('Nothing sticks out of Focus or the room',!sticks.length,sticks.join(' | '));
+  selfTesting=false;closePanel();ok('Close reverses it: room slides out to the right, page slides back',!document.body.classList.contains('ax-open')&&$('.axin').classList.contains('leaving')&&/skOut/.test(getComputedStyle($('.axin')).animationName));
+  await w(600);selfTesting=true;ok('…and is gone after the slide',!$('.axin'));
+  openPanel();ok('Orka again in the same session: room only, no Focus',S.panel&&!S.fp&&!$('.fpage'));
+  $('.axh [data-a=fptoggle]').click();ok('…Focus opens any time from the room button',!!$('.fpage'));closePanel();
+  try{sessionStorage.setItem(FPK,'night')}catch(e){}openPanel();ok('New part of the day: Focus opens once more',S.fp&&!!$('.fpage'));closePanel();
+  openPanel();ok('…and only once',!S.fp);closePanel();await w(100);
+  /* sleepy Orka: pretend 6 s without input */
+  const nI=nudgeI;selfTesting=false;bubbleClear();face('idle');SL.last=Date.now()-6000;await w(450);
+  ok('No input for 5 s: Orka gets sleepy (eyes closed, Zzz)',SL.on&&S.face==='sleepy'&&document.body.classList.contains('orka-sleepy'));
+  await w(1700);ok('…its head drops',O.sl>.6);
+  await w(1700);ok('…then it startles awake (surprised)',!SL.on&&S.face==='surprised'&&/awake/.test($('#bubble').textContent));
+  await w(1700);ok('Awake again: it nudges if something needs you',!!$('.bub:not(.sm)'));
+  bubbleClear();SL.last=Date.now()-6000;await w(450);slActive();await w(100);ok('Any input wakes it at once',!SL.on&&S.face==='surprised');
+  await w(1700);bubbleClear();face('idle');nudgeI=nI;selfTesting=true;
+  const pb=$('#pocB').getBoundingClientRect(),orb=$('#orka').getBoundingClientRect();ok('POC tools is far from Orka',Math.hypot(pb.left-orb.left,pb.top-orb.top)>500||getComputedStyle($('#pocB')).display==='none');
+  ok('ax_ganes panel is closed by default',!S.panel&&getComputedStyle($('.ax')).width==='0px');
+  ok('Orka is visible when the panel is closed',!!$('#orka')&&$('#orka').getBoundingClientRect().width>40);
+  const x0=O.x;document.dispatchEvent(new MouseEvent('mousemove',{clientX:300,clientY:200}));await w(500);
+  ok('Orka stays in place',Math.abs(O.x-x0)<1);
+  ok('Orka is smaller (≤ 76 px)',$('#orka').offsetWidth<=76);
+  ok('Eyes/face look toward the cursor (left-up)',/translate\(-/.test(faceTransform())&&O.ly<0,faceTransform());
+  const lx1=O.lx;document.dispatchEvent(new MouseEvent('mousemove',{clientX:innerWidth-4,clientY:innerHeight-200}));await w(900);
+  ok('…and follow it to the other side',O.lx>lx1+0.3,lx1.toFixed(2)+' → '+O.lx.toFixed(2));
+  ok('Head shape never warped (2D only)',!/rotateY|rotateX|scale\(/.test($('#orkaHd').style.transform));
+  O.mood=0;for(let k=0;k<8;k++)document.dispatchEvent(new MouseEvent('mousemove',{clientX:600+(k%2?60:-60),clientY:400}));await w(100);
+  ok('Shaking the cursor makes Orka dizzy',S.face==='thinking'&&/dizzy/.test($('#bubble').textContent));
+  await w(1600);ok('…then Orka pouts',S.face==='talk2');await w(1500);bubbleClearSmall();
+  nudge();ok('Orka nudges with a speech bubble',!!$('.bub')&&/Rina/.test($('.bub').textContent));
+  $('.bub [data-a=open]').click();await w(50);ok('Bubble opens ax_ganes on that task',S.panel&&/Rina asked/.test($('.fc').textContent));
+  ok('No to-do list: exactly one task card',$$('.fc').length===1&&!/To-do|0\/5/.test($('.axb').textContent));
+  ok('Card: one main action + Other task only',$$('.fc .acts button').length===2&&/Other task/.test($('.fc .acts').textContent));
+  ok('Greeting reads the store, does not ask',/Since yesterday: 186 chats/.test($('.hi').textContent)&&!/\?/.test($('.hi p').textContent));
+  $('[data-a=review]').click();ok('R3 reply shows the impact before sending',/can’t be unsent/.test($('.fc').textContent)&&/Send reply/.test($('.fc').textContent));
+  $('[data-a=approve]').click();await w(1100);ok('Approve runs and logs “by AX”',S.done.reply&&/by AX/.test($('.fc').textContent));
+  $('[data-a=undo]').click();ok('Undo brings the task back',!S.done.reply);
+  $('[data-a=other]').click();ok('Other task switches the card',/Rice Cooker/.test($('.fc').textContent));
+  $('[data-a=review]').click();ok('R2 stock shows before → after with source',/0/.test($('.prev').textContent)&&/12/.test($('.prev').textContent)&&/POS sync/.test($('.prev').textContent));
+  $('[data-a=approve]').click();await w(1100);ok('Stock update done',S.done.stock===1);
+  ask('Raise Power Bank price by 5%');await w(1000);ok('Chat: price change comes as a preview to approve',/Approve price/.test($('.axb').textContent)&&/1\.364\.000/.test($('.axb').textContent));
+  $('.axb [data-a=apply]').click();ok('Chat preview applies after approval',/by AX for Andi/.test($('.axb').textContent));
+  ok('Orka docks into the panel while it is open',document.body.classList.contains('orka-dock'));
+  closePanel();ok('Close panel',!S.panel);
+  /* privacy guard */
+  await camOn('sim');peopleSeen(2);await w(800);
+  ok('Two people → whole screen blurs',document.body.classList.contains('priv')&&getComputedStyle($('#app')).filter.includes('blur'));
+  ok('Orka stays sharp and warns',getComputedStyle($('#orka')).filter==='none'&&/Someone is behind you/.test($('.bub').textContent));
+  ok('Blur is soft (≤ 10 px)',/blur\((\d+(\.\d+)?)px\)/.test(getComputedStyle($('#app')).filter)&&parseFloat(getComputedStyle($('#app')).filter.match(/blur\(([\d.]+)px/)[1])<=10);
+  ok('Orka stays in the bottom-right corner during privacy',Math.abs(O.x-orkaBounds().x)<1);
+  document.dispatchEvent(new MouseEvent('mousemove',{clientX:20,clientY:20}));await w(500);ok('Orka still follows the cursor during privacy',O.lx<-0.2);
+  ok('No button needed: no primary action in the warning',!$('.bub .btn.pri'));
+  peopleSeen(1);await w(1400);ok('Second person leaves → blur clears by itself',!document.body.classList.contains('priv')&&/All clear/.test($('#bubble').textContent));
+  peopleSeen(1);await w(50);peopleSeen(2);await w(800);ok('Blur returns when someone appears again',document.body.classList.contains('priv'));
+  peopleSeen(1);await w(1400);ok('Blur clears by itself when alone',!document.body.classList.contains('priv'));
+  S.set.privacy=false;peopleSeen(2);await w(800);ok('Privacy guard off in settings → no blur',!document.body.classList.contains('priv'));peopleSeen(1);S.set.privacy=true;
+  /* gestures */
+  poseSeen('palm');await w(950);ok('🖐 hold opens ax_ganes',S.panel===true);
+  runGesture('fist');ok('✊ closes it',!S.panel);
+  poseSeen('point');await w(950);ok('☝️ opens the stock task (or next task)',S.panel);
+  S.set.gestures=false;closePanel();poseSeen('palm');await w(950);ok('Gestures off in settings → ignored',!S.panel);S.set.gestures=true;
+  openPanel();$('[data-a=plus]').click();$('.plusm [data-a=settings]').click();ok('ax_ganes settings (in the + menu) has privacy + gesture switches',$$('.modal [data-sw]').length===5&&/Privacy guard/.test($('.modal').textContent));
+  S.settings=false;camOff();reset();
+  return out;
+}
+if(/[?&]selftest=1/.test(location.search))setTimeout(async()=>{const r=await selfTest();const pre=document.createElement('pre');pre.id='selftest';pre.textContent=JSON.stringify(r);pre.hidden=true;document.body.appendChild(pre);
+  const pass=r.filter(x=>x[0]).length;console.log(`Self-test ${pass}/${r.length}`);r.filter(x=>!x[0]).forEach(x=>console.warn('FAIL',x[1],x[2]))},600);
+
+/* ===================== tablet fit (same as menu pages) ===================== */
+/* fills the window edge to edge: small screens scale the layout down, large ones get more room */
+function fit(){const t=$('#tab');if(!t||document.body.classList.contains('demo'))return;const s=Math.min(1,innerWidth/1100,innerHeight/720);t.style.width=innerWidth/s+'px';t.style.height=innerHeight/s+'px';t.style.transformOrigin='0 0';t.style.transform='scale('+s+')';if(typeof TW!=='undefined'){TW=innerWidth/s;TH=innerHeight/s}}
+addEventListener('resize',fit);fit();
+/* deep links used by the menu pages */
+(function(){const q=location.search;if(/[?&]menus=1/.test(q))S.menus=true;if(/[?&]set=/.test(q))S.settings=true;if(/[?&]ax=1/.test(q))S.panel=true})();
+
+/* ===================== start ===================== */
+render();face('idle');
+/* presenter screenshots: ?demo=panel | priv | nudge */
+const DEMO=(location.search.match(/[?&]demo=(\w+)/)||[])[1];
+/* storyboard screenshots: ?shot=closed|room|focus|progress|preview|chat|plus|settings|nudge|sleepy|dizzy|priv|gesture
+   (settled frame, no motion, POC tools hidden) */
+const SHOT=(location.search.match(/[?&]shot=(\w+)/)||[])[1];
+if(SHOT){document.body.classList.add('demo','shot');document.body.classList.remove('poc-avail');selfTesting=true;
+  const st=document.createElement('style');st.textContent='body.shot *{animation:none!important;transition:none!important}body.shot .pocb{display:none!important}';document.head.appendChild(st);
+  try{sessionStorage.setItem(FPK,dayPart())}catch(e){}
+  const room=fp=>{S.panel=true;S.fp=!!fp;render()};
+  ({closed:()=>render(),
+    room:()=>room(false),
+    focus:()=>room(true),
+    progress:()=>{room(true);S.step='preview';render()},
+    preview:()=>{room(false);S.step='preview';render()},
+    chat:()=>{room(false);S.chat=[{who:'u',text:'Raise Power Bank price by 5%'}];S.chat.push(answer('Raise Power Bank price by 5%'));AN.n=99;render()},
+    plus:()=>{room(false);S.plus=true;render()},
+    settings:()=>{S.settings=true;render()},
+    nudge:()=>{render();nudge()},
+    sleepy:()=>{render();SL.on=true;SL.drop=1;O.sl=1;document.body.classList.add('orka-sleepy');face('sleepy')},
+    dizzy:()=>{render();face('thinking');bubbleSmall('Whoa… dizzy! 😵‍💫')},
+    priv:()=>{render();S.cam.on=true;peopleSeen(2)},
+    gesture:()=>{S.cam.on=true;room(false);S.g={pose:'peace',p:.6};render()}
+  }[SHOT]||(()=>{}))();
+}
+if(DEMO==='panel'){openPanel('reply');S.step='preview';render()}
+else if(DEMO==='priv'){camOn('sim');setTimeout(()=>peopleSeen(2),50)}
+else if(DEMO==='nudge'){setTimeout(nudge,50)}
+else if(!DEMO&&!SHOT&&!/[?&]selftest=1/.test(location.search)){
+  /* v3.4: the kit greets on arrival — the room slides in next to the host app, like Sidekick */
+  if(!/[?&]closed=1/.test(location.search)&&fpDue())setTimeout(()=>{if(!S.panel)openPanel()},700);
+  scheduleNudges();}
+if(DEMO){document.body.classList.remove('poc-avail');document.body.classList.add('demo')}
+</script>
+<script>
+/* v3.5 Orka: faces forward, eyes follow cursor, last touch, or the camera; expressions come from the existing face() calls */
+(function(){const EYE={idle:'<ellipse rx="11.5" ry="16"/>',wow:'<ellipse rx="14" ry="20"/>',small:'<ellipse rx="10" ry="12.5"/>',pout:'<ellipse rx="11" ry="10"/>',happy:'<path class="s" d="M-14 5Q0-15 14 5"/>',closed:'<path class="s" d="M-12 0H12"/>'},
+MOUTH={idle:'<path class="s" d="M-13 0Q0 10 13 0"/>',happy:'<path class="s" d="M-21-3Q0 19 21-3"/>',wow:'<ellipse rx="7" ry="9"/>',pout:'<path class="s" d="M-11 4Q0-6 11 4"/>',small:'<path class="s" d="M-7 0Q0 4 7 0"/>',flat:'<path class="s" d="M-6 0H6"/>',speak:'<ellipse rx="9" ry="7"/>'},
+MAP={idle:['idle','idle'],blink:['closed','idle'],happy:['happy','happy'],content:['happy','idle'],delighted:['happy','happy'],listening:['small','small'],thinking:['small','flat'],confused:['pout','pout'],surprised:['wow','wow'],sorry:['small','pout'],shy:['happy','small'],focus:['small','flat'],speaking:['idle','speak']};
+const hd=document.getElementById('orkaHd'),src=document.getElementById('orkaImg'),orka=document.getElementById('orka');
+const base=new Image();base.src='assets/orka/orka_base.png';base.alt='';base.className='obase';hd.appendChild(base);
+const layer=(c,set)=>{const d=document.createElement('span');d.className='fl '+c;d.innerHTML='<svg viewBox="-32 -32 64 64" aria-hidden="true">'+Object.keys(set).map(k=>'<g data-k="'+k+'">'+set[k]+'</g>').join('')+'</svg>';hd.appendChild(d);return d};
+const EL=layer('el',EYE),ER=layer('er',EYE),MO=layer('mo',MOUTH);
+const show=(l,k)=>l.querySelectorAll('g').forEach(g=>g.classList.toggle('on',g.dataset.k===k));
+function apply(){const m=/orka_\d+_([a-z]+)/.exec(src.getAttribute('src')||'')||[],e=MAP[m[1]]||MAP.idle;show(EL,e[0]);show(ER,e[0]);show(MO,e[1])}
+new MutationObserver(apply).observe(src,{attributes:true,attributeFilter:['src']});apply();
+let px=null,py=0,last=0,gx=0,gy=0,vx=0,vy=0,lt=performance.now();
+addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;last=performance.now()},{passive:true});addEventListener('pointerdown',e=>{px=e.clientX;py=e.clientY;last=performance.now()},{passive:true});
+let ac;orka.addEventListener('click',()=>{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();let w=ac.currentTime;const r=(x,y)=>x+Math.random()*(y-x);for(let i=0,n=3+Math.floor(Math.random()*3);i<n;i++){const d=r(.045,.11),f=r(780,1750),o=ac.createOscillator(),g=ac.createGain();o.type=i%2?'square':'triangle';o.frequency.setValueAtTime(f,w);o.frequency.exponentialRampToValueAtTime(f*(Math.random()<.5?r(1.2,1.7):r(.65,.85)),w+d);g.gain.setValueAtTime(.0001,w);g.gain.exponentialRampToValueAtTime(i%2?.03:.065,w+.01);g.gain.exponentialRampToValueAtTime(.0001,w+d);o.connect(g);g.connect(ac.destination);o.start(w);o.stop(w+d+.03);w+=d*r(.75,1.15)}});
+(function loop(){const t=performance.now(),sd=Math.min(t-lt,50)/1000;lt=t;let ex=0,ey=0;
+ if(px!==null){const r=orka.getBoundingClientRect(),dx=px-(r.left+r.width/2),dy=py-(r.top+r.height/2),d=Math.hypot(dx,dy)||1,k=Math.min(1,d/90);ex=dx/d*k;ey=dy/d*k}
+ if(window.orkaCam&&t-last>1200){ex=orkaCam[0];ey=orkaCam[1]}
+ vx+=((ex-gx)*300-vx*30)*sd;gx+=vx*sd;vy+=((ey-gy)*300-vy*30)*sd;gy+=vy*sd;
+ const eye='translate3d('+gx*37+'%,'+gy*27+'%,0)';EL.style.transform=eye;ER.style.transform=eye;MO.style.transform='translate3d('+gx*26+'%,'+gy*19+'%,0)';requestAnimationFrame(loop)})();
+})();
+</script>
+</body>
+</html>
